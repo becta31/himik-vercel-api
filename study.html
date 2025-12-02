@@ -13,12 +13,12 @@
             --primary-bg: #1a1a2e;
             --secondary-bg: #16213e;
             --accent-blue: #00d4ff;
-            --accent-green: #4ecdc4;
+            --accent-green: #4ecdc4; /* Цвет для акцента и описания */
             --accent-orange: #ff6b35;
             --text-primary: #ffffff;
             --text-secondary: #e0e0e0;
         }
-        
+
         body {
             font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
@@ -29,8 +29,8 @@
         .periodic-grid {
             display: grid;
             /* 18 колонок для Периодической таблицы */
-            grid-template-columns: repeat(18, minmax(0, 1fr)); 
-            gap: 4px; /* Уменьшаем стандартный gap */
+            grid-template-columns: repeat(18, minmax(0, 1fr));
+            gap: 4px;
             padding: 10px;
         }
 
@@ -38,17 +38,17 @@
         .element-card {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 8px;
-            border-left: 4px solid rgba(255, 255, 255, 0.1); /* Базовая граница */
-            transition: all 0.3s ease-in-out; 
+            border-left: 4px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease-in-out;
             transform-style: preserve-3d;
             cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); 
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
             min-height: 90px;
         }
 
         /* Эффект при наведении */
         .element-card:hover {
-            transform: translateY(-5px) scale(1.03); 
+            transform: translateY(-5px) scale(1.03);
             box-shadow: 0 15px 30px rgba(0, 212, 255, 0.5);
         }
 
@@ -60,24 +60,34 @@
         }
 
         /* ========================================================== */
-        /* ЦВЕТА КАТЕГОРИЙ (Улучшение №1: Акцент на левой границе) */
+        /* ЦВЕТА КАТЕГОРИЙ */
         /* ========================================================== */
-        .category-nonmetal { border-left-color: #4CAF50; } /* Неметаллы - зеленый */
-        .category-noble-gas { border-left-color: #00BCD4; } /* Благородные газы - голубой */
-        .category-alkali-metal { border-left-color: #FF9800; } /* Щелочные металлы - ярко-оранжевый */
-        .category-alkaline-earth-metal { border-left-color: #FFEB3B; } /* Щелочноземельные металлы - желтый */
-        .category-transition-metal { border-left-color: #673AB7; } /* Переходные металлы - фиолетовый */
-        .category-post-transition-metal { border-left-color: #F44336; } /* Постпереходные металлы - красный */
-        .category-halogen { border-left-color: #009688; } /* Галогены - бирюзовый */
-        .category-lanthanide { border-left-color: #E91E63; } /* Лантаноиды - розовый */
-        .category-actinide { border-left-color: #795548; } /* Актиноиды - коричневый */
-        .category-metalloid { border-left-color: #2196F3; } /* Металлоиды - синий */
+        .category-nonmetal { border-left-color: #4CAF50; }
+        .category-noble-gas { border-left-color: #00BCD4; }
+        .category-alkali-metal { border-left-color: #FF9800; }
+        .category-alkaline-earth-metal { border-left-color: #FFEB3B; }
+        .category-transition-metal { border-left-color: #673AB7; }
+        .category-post-transition-metal { border-left-color: #F44336; }
+        .category-halogen { border-left-color: #009688; }
+        .category-lanthanide { border-left-color: #E91E63; }
+        .category-actinide { border-left-color: #795548; }
+        .category-metalloid { border-left-color: #2196F3; }
         .category-unknown { border-left-color: #757575; }
+
+        /* ---------------------------------------------------------- */
+        /* НОВЫЙ СТИЛЬ: для выделения описания в модальном окне */
+        .modal-description-text {
+            color: var(--accent-green); /* Ярко-зеленый акцент */
+            font-size: 1.125rem; /* Размер шрифта 18px */
+            font-weight: 500;
+            font-style: italic;
+        }
+        /* ---------------------------------------------------------- */
 
         /* Адаптивность для больших таблиц */
         @media (max-width: 1200px) {
             .periodic-grid {
-                overflow-x: scroll; 
+                overflow-x: scroll;
                 width: 100%;
                 min-width: 1200px;
             }
@@ -98,7 +108,7 @@
     </header>
 
     <div class="max-w-xl mx-auto mb-6">
-        <input type="text" id="searchInput" placeholder="Поиск по имени, символу или номеру..." 
+        <input type="text" id="searchInput" placeholder="Поиск по имени, символу или номеру..."
                class="w-full p-3 rounded-lg bg-secondary-bg text-white border border-gray-600 focus:border-accent-blue focus:ring focus:ring-accent-blue/50"
                onfocus="this.placeholder='Например: Кислород, Fe, 26'">
     </div>
@@ -110,7 +120,7 @@
         <div class="modal-content w-11/12 max-w-lg p-6 rounded-xl shadow-2xl relative" onclick="event.stopPropagation()">
             <h3 id="modalName" class="text-4xl font-bold mb-2 text-accent-blue"></h3>
             <p id="modalSymbol" class="text-6xl font-extrabold mb-4"></p>
-            
+
             <div class="space-y-3 text-lg">
                 <p><strong>Атомный номер:</strong> <span id="modalNumber" class="font-mono"></span></p>
                 <p><strong>Масса:</strong> <span id="modalMass" class="font-mono"></span></p>
@@ -118,11 +128,12 @@
                 <p><strong>Группа:</strong> <span id="modalGroup"></span></p>
                 <p><strong>Конфигурация:</strong> <span id="modalConfig" class="font-mono text-accent-green"></span></p>
                 <p><strong>Категория:</strong> <span id="modalCategory"></span></p>
+
                 <p class="mt-4 border-t border-gray-700 pt-4">
-                    <strong>Описание:</strong> <span id="modalDescription" class="text-text-secondary italic"></span>
+                    <strong>Описание:</strong> <span id="modalDescription" class="modal-description-text"></span>
                 </p>
             </div>
-            
+
             <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors text-2xl">
                 &times;
             </button>
@@ -155,14 +166,13 @@
 
             elementsToRender.forEach(element => {
                 const elementCard = document.createElement('div');
-                
-                // 1. Логика цветового кодирования: 
-                // Заменяем подчеркивания '_' на тире '-' для CSS-классов
+
+                // 1. Логика цветового кодирования:
                 const categoryClassName = `category-${element.category.replace(/_/g, '-')}`;
 
                 // 2. Добавление всех классов
-                elementCard.className = `element-card p-2 text-center text-white ${categoryClassName}`; 
-                
+                elementCard.className = `element-card p-2 text-center text-white ${categoryClassName}`;
+
                 elementCard.onclick = () => openModal(element);
 
                 // 3. Содержимое карточки
@@ -177,16 +187,15 @@
                 let gridRow = element.period;
                 let gridColumn = element.group;
 
-                // Корректировка позиционирования f-элементов (Лантаноиды и Актиноиды)
+                // Корректировка позиционирования f-элементов
                 if (element.category === 'lanthanide') {
                     gridRow = 8;
-                    // Рассчитываем колонку для f-блока
-                    gridColumn = element.atomic_number - 54 + 2; 
+                    gridColumn = element.atomic_number - 54 + 2;
                 } else if (element.category === 'actinide') {
                     gridRow = 9;
-                    gridColumn = element.atomic_number - 86 + 2; 
+                    gridColumn = element.atomic_number - 86 + 2;
                 }
-                
+
                 // Проверка на корректность данных
                 if (gridRow > 0 && gridColumn > 0) {
                     elementCard.style.gridRow = gridRow;
@@ -206,7 +215,7 @@
             });
             renderTable(results);
         }
-        
+
         // Открытие модального окна
         function openModal(element) {
             document.getElementById('modalName').textContent = element.name_ru;
@@ -216,7 +225,6 @@
             document.getElementById('modalPeriod').textContent = element.period;
             document.getElementById('modalGroup').textContent = element.group;
             document.getElementById('modalConfig').textContent = element.electron_configuration;
-            // Делаем имя категории читабельным
             document.getElementById('modalCategory').textContent = element.category.replace(/_/g, ' '); 
             document.getElementById('modalDescription').textContent = element.description;
 

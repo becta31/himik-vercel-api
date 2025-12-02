@@ -1,0 +1,110 @@
+[
+    {
+        "atomic_number": 1,
+        "symbol": "H",
+        "name_ru": "Водород",
+        "name_en": "Hydrogen",
+        "mass": 1.008,
+        "category": "nonmetal",
+        "period": 1,
+        "group": 1,
+        "electron_configuration": "1s¹",
+        "description": "Самый легкий элемент"
+    },
+    {
+        "atomic_number": 6,
+        "symbol": "C",
+        "name_ru": "Углерод",
+        "name_en": "Carbon",
+        "mass": 12.011,
+        "category": "nonmetal",
+        "period": 2,
+        "group": 14,
+        "electron_configuration": "[He] 2s² 2p²",
+        "description": "Основа органической химии"
+    },
+    {
+        "atomic_number": 8,
+        "symbol": "O",
+        "name_ru": "Кислород",
+        "name_en": "Oxygen",
+        "mass": 15.999,
+        "category": "nonmetal",
+        "period": 2,
+        "group": 16,
+        "electron_configuration": "[He] 2s² 2p⁴",
+        "description": "Необходим для дыхания"
+    },
+    {
+        "atomic_number": 11,
+        "symbol": "Na",
+        "name_ru": "Натрий",
+        "name_en": "Sodium",
+        "mass": 22.990,
+        "category": "alkali_metal",
+        "period": 3,
+        "group": 1,
+        "electron_configuration": "[Ne] 3s¹",
+        "description": "Щелочной металл"
+    },
+    {
+        "atomic_number": 26,
+        "symbol": "Fe",
+        "name_ru": "Железо",
+        "name_en": "Iron",
+        "mass": 55.845,
+        "category": "transition_metal",
+        "period": 4,
+        "group": 8,
+        "electron_configuration": "[Ar] 3d⁶ 4s²",
+        "description": "Важный металл"
+    },
+	{
+        "atomic_number": 2,
+        "symbol": "He",
+        "name_ru": "Гелий",
+        "name_en": "Helium",
+        "mass": 4.003,
+        "category": "noble_gas",
+        "period": 1,
+        "group": 18,
+        "electron_configuration": "1s²",
+        "description": "Инертный газ, легче воздуха. Используется в воздушных шарах и криогенике."
+    },
+    {
+        "atomic_number": 88,
+        "symbol": "Ra",
+        "name_ru": "Радий",
+        "name_en": "Radium",
+        "mass": 226.025,
+        "category": "alkaline_earth_metal",
+        "period": 7,
+        "group": 2,
+        "electron_configuration": "[Rn] 7s²",
+        "description": "Сильно радиоактивный щелочноземельный металл. Был открыт Марией и Пьером Кюри."
+    },
+    {
+        "atomic_number": 92,
+        "symbol": "U",
+        "name_ru": "Уран",
+        "name_en": "Uranium",
+        "mass": 238.029,
+        "category": "actinide",
+        "period": 7,
+        "group": 3,
+        "electron_configuration": "[Rn] 5f³ 6d¹ 7s²",
+        "description": "Тяжелый радиоактивный металл, основной источник топлива для атомной энергетики."
+    },
+    {
+        "atomic_number": 79,
+        "symbol": "Au",
+        "name_ru": "Золото",
+        "name_en": "Gold",
+        "mass": 196.967,
+        "category": "transition_metal",
+        "period": 6,
+        "group": 11,
+        "electron_configuration": "[Xe] 4f¹⁴ 5d¹⁰ 6s¹",
+        "description": "Драгоценный металл"
+    }
+]

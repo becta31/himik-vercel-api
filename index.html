@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HIMIK - Тренажер по химии</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.birds.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-bg: #1a1a2e;
+            --secondary-bg: #16213e;
+            --accent-blue: #00d4ff;
+            --accent-green: #4ecdc4;
+            --accent-orange: #ff6b35;
+            --text-primary: #ffffff;
+            --text-secondary: #e0e0e0;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .molecular-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+            z-index: -1;
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-green));
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+        }
+        
+        .element-symbol {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-blue);
+        }
+        
+        .floating-element {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .pulse-glow {
+            animation: pulse-glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes pulse-glow {
+            from { box-shadow: 0 0 20px rgba(0, 212, 255, 0.3); }
+            to { box-shadow: 0 0 40px rgba(0, 212, 255, 0.6); }
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- Фон с молекулярной структурой -->
+    <div id="molecular-bg" class="molecular-bg"></div>
+    
+    <!-- Навигация -->
+    <nav class="relative z-10 p-6">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-gradient-to-r from-blue-400 to-green-400 rounded-lg flex items-center justify-center">
+                    <span class="text-white font-bold text-lg">H</span>
+                </div>
+                <span class="text-2xl font-bold hero-title">HIMIK</span>
+            </div>
+            <div class="hidden md:flex space-x-6">
+                <a href="#" class="text-gray-300 hover:text-white transition-colors">Главная</a>
+                <a href="study.html" class="text-gray-300 hover:text-white transition-colors">Обучение</a>
+                <a href="quiz.html" class="text-gray-300 hover:text-white transition-colors">Викторина</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Главный героический блок -->
+    <section class="relative z-10 pt-20 pb-32">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-20">
+                <h1 class="text-6xl md:text-8xl font-bold hero-title mb-6">
+                    HIMIK
+                </h1>
+                <p class="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto">
+                    Современный тренажер по химии для изучения химических элементов периодической таблицы
+                </p>
+                <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
+                    <button onclick="window.location.href='study.html'" class="btn-primary px-8 py-4 rounded-full text-white font-semibold text-lg">
+                        Начать обучение
+                    </button>
+                    <button onclick="window.location.href='quiz.html'" class="border-2 border-blue-400 px-8 py-4 rounded-full text-blue-400 font-semibold text-lg hover:bg-blue-400 hover:text-white transition-all">
+                        Пройти викторину
+                    </button>
+                </div>
+            </div>
+
+            <!-- Особенности приложения -->
+            <div class="grid md:grid-cols-3 gap-8 mb-20">
+                <div class="card-hover rounded-2xl p-8 text-center">
+                    <div class="w-16 h-16 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full mx-auto mb-6 flex items-center justify-center">
+                        <span class="text-2xl">📚</span>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-4">Режим обучения</h3>
+                    <p class="text-gray-400">Изучайте химические элементы через интерактивные карточки с подробной информацией</p>
+                </div>
+                
+                <div class="card-hover rounded-2xl p-8 text-center">
+                    <div class="w-16 h-16 bg-gradient-to-r from-green-400 to-blue-500 rounded-full mx-auto mb-6 flex items-center justify-center">
+                        <span class="text-2xl">🎯</span>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-4">Викторина</h3>
+                    <p class="text-gray-400">Проверьте свои знания в интерактивной викторине с различными типами вопросов</p>
+                </div>
+                
+                <div class="card-hover rounded-2xl p-8 text-center">
+                    <div class="w-16 h-16 bg-gradient-to-r from-orange-400 to-red-500 rounded-full mx-auto mb-6 flex items-center justify-center">
+                        <span class="text-2xl">📊</span>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-4">Прогресс</h3>
+                    <p class="text-gray-400">Отслеживайте свой прогресс обучения и улучшайте результаты</p>
+                </div>
+            </div>
+
+            <!-- Примеры элементов -->
+            <div class="text-center">
+                <h2 class="text-4xl font-bold mb-12">Популярные элементы</h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <div class="floating-element card-hover rounded-xl p-6">
+                        <div class="element-symbol text-4xl font-bold mb-2">H</div>
+                        <div class="text-lg font-semibold">Водород</div>
+                        <div class="text-sm text-gray-400">1.008</div>
+                    </div>
+                    <div class="floating-element card-hover rounded-xl p-6" style="animation-delay: 1s;">
+                        <div class="element-symbol text-4xl font-bold mb-2">O</div>
+                        <div class="text-lg font-semibold">Кислород</div>
+                        <div class="text-sm text-gray-400">15.999</div>
+                    </div>
+                    <div class="floating-element card-hover rounded-xl p-6" style="animation-delay: 2s;">
+                        <div class="element-symbol text-4xl font-bold mb-2">Fe</div>
+                        <div class="text-lg font-semibold">Железо</div>
+                        <div class="text-sm text-gray-400">55.845</div>
+                    </div>
+                    <div class="floating-element card-hover rounded-xl p-6" style="animation-delay: 3s;">
+                        <div class="element-symbol text-4xl font-bold mb-2">Au</div>
+                        <div class="text-lg font-semibold">Золото</div>
+                        <div class="text-sm text-gray-400">196.967</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Подвал -->
+    <footer class="relative z-10 border-t border-gray-700 py-8">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <p class="text-gray-400">&copy; 2025 HIMIK - Тренажер по химии. Современное образование для будущих ученых.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Инициализация фона с молекулами
+        VANTA.BIRDS({
+            el: "#molecular-bg",
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.00,
+            minWidth: 200.00,
+            scale: 1.00,
+            scaleMobile: 1.00,
+            backgroundColor: 0x1a1a2e,
+            color1: 0x00d4ff,
+            color2: 0x4ecdc4,
+            birdSize: 1.5,
+            wingSpan: 25.00,
+            speedLimit: 3.00,
+            separation: 20.00,
+            alignment: 20.00,
+            cohesion: 20.00,
+            quantity: 3.00
+        });
+
+        // Плавная прокрутка
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+<script>
+    document.addEventListener('keydown', e => {
+        if (e.key === 'ArrowRight' || e.key === ' ') {
+            e.preventDefault();
+            window.parent.postMessage('go-next', '*');
+        } else if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            window.parent.postMessage('go-prev', '*');
+        }
+    });
+</script>
+</body>
+</html>

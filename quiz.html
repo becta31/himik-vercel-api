@@ -23,256 +23,517 @@
             font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
             min-height: 100vh;
-            color: var(--text-primary);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
         }
-
-        .card {
-            background-color: var(--secondary-bg);
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            width: 100%;
-            max-width: 500px;
+        
+        .quiz-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .answer-option {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .answer-option:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--accent-blue);
+            transform: translateX(5px);
+        }
+        
+        .answer-option.correct {
+            background: rgba(46, 204, 113, 0.2);
+            border-color: #2ecc71;
+        }
+        
+        .answer-option.incorrect {
+            background: rgba(231, 76, 60, 0.2);
+            border-color: #e74c3c;
+        }
+        
+        .answer-option.selected {
+            background: rgba(0, 212, 255, 0.2);
+            border-color: var(--accent-blue);
+        }
+        
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
+            transition: width 0.5s ease;
+        }
+        
+        .element-symbol {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-blue);
+        }
+        
+        .score-animation {
+            animation: scoreUp 0.6s ease-out;
+        }
+        
+        @keyframes scoreUp {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        .question-enter {
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
         }
     </style>
 </head>
-<body>
-    <div class="w-full max-w-xl">
-        <header class="mb-8 text-center">
-            <h1 class="text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-accent-blue to-accent-green mb-4">
-                <a href="index.html">HIMIK Викторина</a>
-            </h1>
-            <p class="text-gray-400">Проверьте свои знания о химических элементах!</p>
-        </header>
-
-        <div id="questionCard" class="card p-8">
-            <div class="flex justify-between items-start mb-6 border-b border-gray-700 pb-3">
-                <p class="text-md text-gray-400">
-                    Лучший счет: <span id="highScore" class="font-extrabold text-accent-orange">0</span>
-                </p>
-                <p class="text-xl font-semibold">
-                    Счет: <span id="scoreValue" class="text-accent-green">0</span>
-                </p>
+<body class="text-white">
+    <!-- Навигация -->
+    <nav class="p-6">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-gradient-to-r from-blue-400 to-green-400 rounded-lg flex items-center justify-center">
+                    <span class="text-white font-bold text-lg">H</span>
+                </div>
+                <span class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-green-400">HIMIK</span>
             </div>
+            <div class="hidden md:flex space-x-6">
+                <a href="index.html" class="text-gray-300 hover:text-white transition-colors">Главная</a>
+                <a href="study.html" class="text-gray-300 hover:text-white transition-colors">Обучение</a>
+                <a href="#" class="text-white font-semibold">Викторина</a>
+            </div>
+        </div>
+    </nav>
 
-            <p id="questionNumber" class="text-lg text-gray-400 mb-4">Вопрос 1 из X</p>
-            <p id="questionText" class="text-2xl font-semibold mb-6"></p>
-
-            <input type="text" id="answerInput" placeholder="Ваш ответ..."
-                   class="w-full p-3 rounded-lg bg-primary-bg text-white border border-gray-600 focus:border-accent-blue focus:ring focus:ring-accent-blue/50 mb-4"
-                   autofocus>
-
-            <p id="feedback" class="text-center font-bold mb-4 h-6"></p>
-
-            <button id="checkButton" onclick="checkAnswer()"
-                    class="w-full px-4 py-3 bg-accent-blue text-white rounded-lg text-lg font-bold hover:bg-opacity-80 transition-colors">
-                Проверить
-            </button>
+    <!-- Основной контент -->
+    <main class="max-w-4xl mx-auto px-6 py-8">
+        <!-- Заголовок -->
+        <div class="text-center mb-8">
+            <h1 class="text-5xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-green-400">Химическая викторина</h1>
+            <p class="text-xl text-gray-300">Проверьте свои знания химических элементов</p>
         </div>
 
-        <div id="resultsCard" class="card p-8 text-center hidden">
-            <h2 class="text-3xl font-bold mb-6 text-accent-orange">Викторина завершена!</h2>
-
-            <div class="space-y-3 mb-8">
-                <p class="text-2xl text-accent-green font-bold">
-                    Ваш результат: <span id="finalScore" class="text-3xl">0</span>
-                </p>
-                <p class="text-xl text-accent-orange font-bold border-t border-gray-700 pt-3">
-                    Лучший результат: <span id="newHighScore">0</span>
-                </p>
+        <!-- Статистика -->
+        <div class="quiz-card rounded-2xl p-6 mb-8">
+            <div class="flex justify-between items-center mb-4">
+                <div class="flex items-center space-x-6">
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-blue-400" id="currentQuestion">1</div>
+                        <div class="text-sm text-gray-400">Вопрос</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-green-400" id="score">0</div>
+                        <div class="text-sm text-gray-400">Очки</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-orange-400" id="streak">0</div>
+                        <div class="text-sm text-gray-400">Подряд</div>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <div class="text-sm text-gray-400 mb-2">Прогресс</div>
+                    <div class="progress-bar rounded-full w-32 h-2">
+                        <div class="progress-fill h-full rounded-full" id="progressBar" style="width: 10%"></div>
+                    </div>
+                </div>
             </div>
-
-            <button onclick="restartQuiz()"
-                    class="w-full px-4 py-3 bg-accent-green text-white rounded-lg text-lg font-bold hover:bg-opacity-80 transition-colors">
-                Начать заново
-            </button>
-            <a href="index.html" class="block mt-4 text-gray-400 hover:text-white transition-colors">
-                ← Вернуться на главную
-            </a>
         </div>
-    </div>
+
+        <!-- Карточка вопроса -->
+        <div id="questionCard" class="quiz-card rounded-2xl p-8 mb-6 question-enter">
+            <div class="text-center mb-8">
+                <h2 id="questionText" class="text-2xl font-semibold mb-4">Загрузка вопроса...</h2>
+                <div id="questionElement" class="element-symbol text-6xl font-bold mb-4"></div>
+            </div>
+            
+            <div id="answerOptions" class="space-y-4">
+                <!-- Варианты ответов будут сгенерированы JavaScript -->
+            </div>
+            
+            <div class="mt-8 text-center">
+                <button id="nextButton" onclick="nextQuestion()" class="hidden px-8 py-3 bg-gradient-to-r from-blue-500 to-green-500 rounded-lg font-semibold hover:from-blue-600 hover:to-green-600 transition-all">
+                    Следующий вопрос
+                </button>
+            </div>
+        </div>
+
+        <!-- Результаты -->
+        <div id="resultsCard" class="quiz-card rounded-2xl p-8 text-center hidden">
+            <div class="mb-8">
+                <div class="text-6xl mb-4">🎉</div>
+                <h2 class="text-3xl font-bold mb-4">Викторина завершена!</h2>
+                <p class="text-xl text-gray-300 mb-6">Ваши результаты:</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-6 mb-8">
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-blue-400 mb-2" id="finalScore">0</div>
+                    <div class="text-gray-400">Общие очки</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-green-400 mb-2" id="correctAnswers">0</div>
+                    <div class="text-gray-400">Правильных ответов</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-orange-400 mb-2" id="maxStreak">0</div>
+                    <div class="text-gray-400">Максимум подряд</div>
+                </div>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button onclick="restartQuiz()" class="px-8 py-3 bg-gradient-to-r from-blue-500 to-green-500 rounded-lg font-semibold hover:from-blue-600 hover:to-green-600 transition-all">
+                    Попробовать снова
+                </button>
+                <button onclick="window.location.href='study.html'" class="px-8 py-3 border-2 border-blue-400 text-blue-400 rounded-lg font-semibold hover:bg-blue-400 hover:text-white transition-all">
+                    Перейти к обучению
+                </button>
+            </div>
+        </div>
+    </main>
 
     <script>
         let elements = [];
-        let currentElementIndex = 0;
+        let currentQuestionIndex = 0;
         let score = 0;
-        let currentQuestionType = '';
+        let streak = 0;
+        let maxStreak = 0;
+        let correctAnswers = 0;
+        let currentQuestion = null;
+        let answered = false;
 
-        // ==========================================================
-        // КОД ДЛЯ ПРОГРЕССА (Local Storage)
-        // ==========================================================
+        const TOTAL_QUESTIONS = 10;
 
-        function saveScore(newScore) {
-            const currentHighScore = loadHighScore();
-            if (newScore > currentHighScore) {
-                localStorage.setItem('himikHighScore', newScore);
-                return newScore;
+        // Типы вопросов
+        const QUESTION_TYPES = [
+            'symbol_to_name',
+            'name_to_symbol', 
+            'symbol_to_mass',
+            'name_to_mass',
+            'electron_config'
+        ];
+
+        // Загрузка данных
+        async function loadElements() {
+            try {
+                console.log('Загрузка элементов...');
+                const response = await fetch('./elements.json');
+                console.log('Ответ получен:', response.status);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                elements = await response.json();
+                console.log('Элементы загружены:', elements.length);
+                startQuiz();
+            } catch (error) {
+                console.error('Ошибка загрузки данных:', error);
+                // Временные данные для демонстрации
+                elements = [
+                    {
+                        "atomic_number": 1,
+                        "symbol": "H",
+                        "name_ru": "Водород",
+                        "name_en": "Hydrogen",
+                        "mass": 1.008,
+                        "category": "nonmetal",
+                        "period": 1,
+                        "group": 1,
+                        "electron_configuration": "1s¹",
+                        "description": "Самый легкий элемент"
+                    },
+                    {
+                        "atomic_number": 6,
+                        "symbol": "C",
+                        "name_ru": "Углерод",
+                        "name_en": "Carbon",
+                        "mass": 12.011,
+                        "category": "nonmetal",
+                        "period": 2,
+                        "group": 14,
+                        "electron_configuration": "[He] 2s² 2p²",
+                        "description": "Основа органической химии"
+                    },
+                    {
+                        "atomic_number": 8,
+                        "symbol": "O",
+                        "name_ru": "Кислород",
+                        "name_en": "Oxygen",
+                        "mass": 15.999,
+                        "category": "nonmetal",
+                        "period": 2,
+                        "group": 16,
+                        "electron_configuration": "[He] 2s² 2p⁴",
+                        "description": "Необходим для дыхания"
+                    },
+                    {
+                        "atomic_number": 11,
+                        "symbol": "Na",
+                        "name_ru": "Натрий",
+                        "name_en": "Sodium",
+                        "mass": 22.990,
+                        "category": "alkali_metal",
+                        "period": 3,
+                        "group": 1,
+                        "electron_configuration": "[Ne] 3s¹",
+                        "description": "Щелочной металл"
+                    },
+                    {
+                        "atomic_number": 26,
+                        "symbol": "Fe",
+                        "name_ru": "Железо",
+                        "name_en": "Iron",
+                        "mass": 55.845,
+                        "category": "transition_metal",
+                        "period": 4,
+                        "group": 8,
+                        "electron_configuration": "[Ar] 3d⁶ 4s²",
+                        "description": "Важный металл"
+                    },
+                    {
+                        "atomic_number": 79,
+                        "symbol": "Au",
+                        "name_ru": "Золото",
+                        "name_en": "Gold",
+                        "mass": 196.967,
+                        "category": "transition_metal",
+                        "period": 6,
+                        "group": 11,
+                        "electron_configuration": "[Xe] 4f¹⁴ 5d¹⁰ 6s¹",
+                        "description": "Драгоценный металл"
+                    }
+                ];
+                startQuiz();
             }
-            return currentHighScore;
         }
 
-        function loadHighScore() {
-            return parseInt(localStorage.getItem('himikHighScore')) || 0;
-        }
-
-        function displayHighScore() {
-            const highScoreElement = document.getElementById('highScore');
-            if (highScoreElement) {
-                highScoreElement.textContent = loadHighScore();
-            }
-        }
-
-        // ==========================================================
-        // ОСНОВНЫЕ ФУНКЦИИ ВИКТОРИНЫ
-        // ==========================================================
-
-        function loadElements() {
-            fetch('elements.json')
-                .then(response => response.json())
-                .then(data => {
-                    elements = data;
-                    startQuiz();
-                })
-                .catch(error => console.error('Ошибка загрузки элементов:', error));
-        }
-
+        // Начало викторины
         function startQuiz() {
+            console.log('Начало викторины, элементов:', elements.length);
+            currentQuestionIndex = 0;
             score = 0;
-            currentElementIndex = 0;
-            shuffleArray(elements);
-            displayHighScore(); // Отображаем лучший счет при старте
-            nextQuestion();
+            streak = 0;
+            maxStreak = 0;
+            correctAnswers = 0;
+            generateQuestion();
+            updateStats();
         }
 
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-        }
-
-        function nextQuestion() {
-            if (currentElementIndex >= elements.length) {
+        // Генерация вопроса
+        function generateQuestion() {
+            if (currentQuestionIndex >= TOTAL_QUESTIONS) {
                 showResults();
                 return;
             }
 
-            const element = elements[currentElementIndex];
-            const answerInput = document.getElementById('answerInput');
+            answered = false;
+            const questionType = QUESTION_TYPES[Math.floor(Math.random() * QUESTION_TYPES.length)];
+            const correctElement = elements[Math.floor(Math.random() * elements.length)];
+            
+            let questionText = '';
+            let correctAnswer = '';
+            let questionElement = '';
 
-            // Сбрасываем UI
-            answerInput.value = '';
-            answerInput.disabled = false;
-            document.getElementById('feedback').textContent = '';
-            document.getElementById('checkButton').disabled = false;
-
-            // Случайный выбор типа вопроса
-            const questionTypes = ['symbol', 'name_ru', 'atomic_number'];
-            currentQuestionType = questionTypes[Math.floor(Math.random() * questionTypes.length)];
-
-            let questionText;
-            switch (currentQuestionType) {
-                case 'symbol':
-                    questionText = `Какой <b>символ</b> у элемента: ${element.name_ru}?`;
+            switch (questionType) {
+                case 'symbol_to_name':
+                    questionText = `Какое название у элемента с символом ${correctElement.symbol}?`;
+                    correctAnswer = correctElement.name_ru;
+                    questionElement = correctElement.symbol;
                     break;
-                case 'name_ru':
-                    questionText = `Как называется элемент с символом <b>${element.symbol}</b>?`;
+                case 'name_to_symbol':
+                    questionText = `Какой символ у элемента ${correctElement.name_ru}?`;
+                    correctAnswer = correctElement.symbol;
+                    questionElement = correctElement.name_ru;
                     break;
-                case 'atomic_number':
-                    questionText = `Какой <b>атомный номер</b> у элемента: ${element.name_ru}?`;
+                case 'symbol_to_mass':
+                    questionText = `Какая атомная масса у элемента ${correctElement.symbol}?`;
+                    correctAnswer = correctElement.mass.toString();
+                    questionElement = correctElement.symbol;
+                    break;
+                case 'name_to_mass':
+                    questionText = `Какая атомная масса у элемента ${correctElement.name_ru}?`;
+                    correctAnswer = correctElement.mass.toString();
+                    questionElement = correctElement.name_ru;
+                    break;
+                case 'electron_config':
+                    questionText = `Какая электронная конфигурация у элемента ${correctElement.symbol}?`;
+                    correctAnswer = correctElement.electron_configuration;
+                    questionElement = correctElement.symbol;
                     break;
             }
 
-            document.getElementById('questionText').innerHTML = questionText;
-            document.getElementById('scoreValue').textContent = score;
-            document.getElementById('questionNumber').textContent = `Вопрос ${currentElementIndex + 1} из ${elements.length}`;
-            answerInput.focus();
+            // Генерация неправильных ответов
+            const wrongAnswers = generateWrongAnswers(correctElement, questionType, correctAnswer);
+            const allAnswers = [correctAnswer, ...wrongAnswers].sort(() => Math.random() - 0.5);
+
+            currentQuestion = {
+                type: questionType,
+                element: correctElement,
+                questionText,
+                correctAnswer,
+                questionElement,
+                answers: allAnswers
+            };
+
+            renderQuestion();
         }
 
-        function checkAnswer() {
-            const element = elements[currentElementIndex];
-            const answerInput = document.getElementById('answerInput');
-            const feedback = document.getElementById('feedback');
-            const userAnswer = answerInput.value.trim().toLowerCase();
-            let correctAnswer;
-            let isCorrect = false;
+        // Генерация неправильных ответов
+        function generateWrongAnswers(correctElement, questionType, correctAnswer) {
+            const wrongAnswers = [];
+            const otherElements = elements.filter(el => el.symbol !== correctElement.symbol);
 
-            switch (currentQuestionType) {
-                case 'symbol':
-                    correctAnswer = element.symbol.toLowerCase();
-                    isCorrect = userAnswer === correctAnswer;
+            switch (questionType) {
+                case 'symbol_to_name':
+                case 'name_to_symbol':
+                    // Выбираем случайные названия/символы других элементов
+                    for (let i = 0; i < 3 && i < otherElements.length; i++) {
+                        const randomElement = otherElements[Math.floor(Math.random() * otherElements.length)];
+                        wrongAnswers.push(questionType === 'symbol_to_name' ? randomElement.name_ru : randomElement.symbol);
+                    }
                     break;
-                case 'name_ru':
-                    correctAnswer = element.name_ru.toLowerCase();
-                    isCorrect = userAnswer === correctAnswer;
+                case 'symbol_to_mass':
+                case 'name_to_mass':
+                    // Генерируем близкие по массе значения
+                    const baseMass = correctElement.mass;
+                    for (let i = 0; i < 3; i++) {
+                        const variation = (Math.random() - 0.5) * 20; // ±10 единиц
+                        wrongAnswers.push((baseMass + variation).toFixed(3));
+                    }
                     break;
-                case 'atomic_number':
-                    correctAnswer = element.atomic_number.toString();
-                    isCorrect = userAnswer === correctAnswer;
+                case 'electron_config':
+                    // Используем конфигурации других элементов
+                    for (let i = 0; i < 3 && i < otherElements.length; i++) {
+                        const randomElement = otherElements[Math.floor(Math.random() * otherElements.length)];
+                        wrongAnswers.push(randomElement.electron_configuration);
+                    }
                     break;
             }
 
+            return wrongAnswers;
+        }
+
+        // Отображение вопроса
+        function renderQuestion() {
+            document.getElementById('questionText').textContent = currentQuestion.questionText;
+            document.getElementById('questionElement').textContent = currentQuestion.questionElement;
+            
+            const optionsContainer = document.getElementById('answerOptions');
+            optionsContainer.innerHTML = currentQuestion.answers.map((answer, index) => `
+                <div class="answer-option rounded-lg p-4" onclick="selectAnswer('${answer}', ${index})">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-full border-2 border-gray-400 flex items-center justify-center text-sm font-semibold">
+                            ${String.fromCharCode(65 + index)}
+                        </div>
+                        <span class="text-lg">${answer}</span>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('nextButton').classList.add('hidden');
+        }
+
+        // Выбор ответа
+        function selectAnswer(selectedAnswer, index) {
+            if (answered) return;
+            
+            answered = true;
+            const options = document.querySelectorAll('.answer-option');
+            
+            // Подсветка правильного и неправильного ответов
+            options.forEach((option, i) => {
+                const answer = currentQuestion.answers[i];
+                if (answer === currentQuestion.correctAnswer) {
+                    option.classList.add('correct');
+                } else if (answer === selectedAnswer && answer !== currentQuestion.correctAnswer) {
+                    option.classList.add('incorrect');
+                }
+                
+                if (answer === selectedAnswer) {
+                    option.classList.add('selected');
+                }
+            });
+
+            // Проверка ответа
+            const isCorrect = selectedAnswer === currentQuestion.correctAnswer;
+            
             if (isCorrect) {
-                feedback.textContent = `✅ Правильно! Это ${element.name_ru}.`;
-                feedback.className = 'text-green-400 font-bold';
-                score++;
-                document.getElementById('scoreValue').textContent = score;
+                score += 10 + streak;
+                correctAnswers++;
+                streak++;
+                maxStreak = Math.max(maxStreak, streak);
+                
+                // Анимация увеличения счета
+                const scoreElement = document.getElementById('score');
+                scoreElement.classList.add('score-animation');
+                setTimeout(() => scoreElement.classList.remove('score-animation'), 600);
             } else {
-                feedback.textContent = `❌ Ошибка. Правильный ответ: ${correctAnswer}.`;
-                feedback.className = 'text-red-400 font-bold';
+                streak = 0;
             }
 
-            answerInput.disabled = true;
-            document.getElementById('checkButton').disabled = true;
-
-            setTimeout(() => {
-                currentElementIndex++;
-                nextQuestion();
-            }, 1500);
+            updateStats();
+            document.getElementById('nextButton').classList.remove('hidden');
         }
 
+        // Следующий вопрос
+        function nextQuestion() {
+            currentQuestionIndex++;
+            generateQuestion();
+            updateStats();
+            
+            // Анимация перехода
+            const questionCard = document.getElementById('questionCard');
+            questionCard.classList.remove('question-enter');
+            void questionCard.offsetWidth; // Перезапуск анимации
+            questionCard.classList.add('question-enter');
+        }
+
+        // Обновление статистики
+        function updateStats() {
+            document.getElementById('currentQuestion').textContent = Math.min(currentQuestionIndex + 1, TOTAL_QUESTIONS);
+            document.getElementById('score').textContent = score;
+            document.getElementById('streak').textContent = streak;
+            
+            const progress = ((currentQuestionIndex) / TOTAL_QUESTIONS) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        // Показ результатов
         function showResults() {
             document.getElementById('questionCard').classList.add('hidden');
-            const resultsCard = document.getElementById('resultsCard');
-            resultsCard.classList.remove('hidden');
-
-            // Сохранение и отображение лучшего счета
-            const previousHighScore = loadHighScore();
-            const newHighScore = saveScore(score);
-
+            document.getElementById('resultsCard').classList.remove('hidden');
+            
             document.getElementById('finalScore').textContent = score;
-            document.getElementById('newHighScore').textContent = newHighScore;
-
-            // Сообщение о прогрессе
-            let message;
-            if (score === elements.length) {
-                message = 'Идеальный результат! Вы настоящий химик! 🥇';
-            } else if (score === newHighScore && score > previousHighScore) {
-                message = '🥳 Новый Лучший Результат! Поздравляем!';
-            } else if (score > elements.length * 0.7) {
-                message = 'Отличный результат! Продолжайте в том же духе. ✨';
+            document.getElementById('correctAnswers').textContent = correctAnswers;
+            document.getElementById('maxStreak').textContent = maxStreak;
+            
+            // Вычисление процента правильных ответов
+            const percentage = Math.round((correctAnswers / TOTAL_QUESTIONS) * 100);
+            let message = '';
+            
+            if (percentage >= 90) {
+                message = 'Отличный результат! Вы настоящий химик! 🧪';
+            } else if (percentage >= 70) {
+                message = 'Хорошая работа! У вас есть знания в химии! 👍';
+            } else if (percentage >= 50) {
+                message = 'Неплохо! Продолжайте учиться! 📚';
             } else {
-                message = 'Неплохо, но есть куда расти. Не сдавайтесь! 💪';
+                message = 'Нужно больше практики! Не сдавайтесь! 💪';
             }
-
-            // Удаляем старое сообщение, если оно есть
-            const oldMessage = resultsCard.querySelector('.result-message');
-            if (oldMessage) {
-                oldMessage.remove();
-            }
-
+            
+            const resultsCard = document.getElementById('resultsCard');
             const messageElement = document.createElement('p');
-            messageElement.className = 'result-message text-lg text-gray-300 mb-6';
+            messageElement.className = 'text-lg text-gray-300 mb-6';
             messageElement.textContent = message;
-
-            // Вставляем сообщение после заголовка, но перед блоком с результатами
-            const heading = resultsCard.querySelector('h2');
-            resultsCard.insertBefore(messageElement, heading.nextSibling);
+            resultsCard.insertBefore(messageElement, resultsCard.children[2]);
         }
 
+        // Перезапуск викторины
         function restartQuiz() {
             document.getElementById('resultsCard').classList.add('hidden');
             document.getElementById('questionCard').classList.remove('hidden');
@@ -282,14 +543,27 @@
         // Инициализация
         document.addEventListener('DOMContentLoaded', function() {
             loadElements();
-
-            // Назначаем обработчик на кнопку Enter для ввода ответа
-            document.getElementById('answerInput').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter' && !e.target.disabled) {
-                    checkAnswer();
-                }
-            });
         });
+        
+        // Немедленная инициализация если DOM уже загружен
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                loadElements();
+            });
+        } else {
+            loadElements();
+        }
     </script>
+<script>
+    document.addEventListener('keydown', e => {
+        if (e.key === 'ArrowRight' || e.key === ' ') {
+            e.preventDefault();
+            window.parent.postMessage('go-next', '*');
+        } else if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            window.parent.postMessage('go-prev', '*');
+        }
+    });
+</script>
 </body>
 </html>

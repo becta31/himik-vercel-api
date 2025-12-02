@@ -23,445 +23,202 @@
             font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
             min-height: 100vh;
+            color: var(--text-primary);
         }
-        
+
+        .periodic-grid {
+            display: grid;
+            /* 18 колонок для Периодической таблицы */
+            grid-template-columns: repeat(18, minmax(0, 1fr)); 
+            gap: 4px; /* Уменьшаем стандартный gap */
+            padding: 10px;
+        }
+
+        /* Общие стили карточек элементов */
         .element-card {
-            /* Убедимся, что цвет текста по умолчанию белый */
-            color: var(--text-primary); 
-            
-            /* Сбрасываем оригинальный фон для применения категорийных цветов */
-            background: rgba(255, 255, 255, 0.05); 
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border-left: 4px solid rgba(255, 255, 255, 0.1); /* Базовая граница */
+            transition: all 0.3s ease-in-out; 
             transform-style: preserve-3d;
             cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); 
+            min-height: 90px;
         }
-        
-        .element-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.2);
-            /* Фон при наведении должен быть чуть ярче основного */
-            background: rgba(255, 255, 255, 0.1); 
-        }
-        
-        .element-symbol {
-            font-family: 'JetBrains Mono', monospace;
-            color: var(--accent-blue);
-        }
-        
-        /* ========================================================== */
-        /* ЦВЕТА КАТЕГОРИЙ: Используется класс category-имя-категории */
-        /* ========================================================== */
-        
-        /* Неметаллы (nonmetal) */
-        .category-nonmetal { 
-            background: rgba(76, 175, 80, 0.2); /* Светло-зеленый фон */
-            border-left: 4px solid #4ecdc4; 
-        }
-        /* Благородные газы (noble_gas) */
-        .category-noble-gas { 
-            background: rgba(30, 136, 229, 0.2); /* Голубой фон */
-            border-left: 4px solid #00d4ff; 
-        }
-        /* Щелочные металлы (alkali_metal) */
-        .category-alkali-metal { 
-            background: rgba(255, 87, 34, 0.2); /* Оранжевый фон */
-            border-left: 4px solid #ff6b35; 
-        }
-        /* Щелочноземельные металлы (alkaline_earth) */
-        .category-alkaline-earth { 
-            background: rgba(255, 193, 7, 0.2); /* Желтый фон */
-            border-left: 4px solid #f39c12; 
-        }
-        /* Переходные металлы (transition_metal) */
-        .category-transition-metal { 
-            background: rgba(103, 58, 183, 0.2); /* Фиолетовый фон */
-            border-left: 4px solid #9b59b6; 
-        }
-        /* Металлоиды (metalloid) */
-        .category-metalloid { 
-            background: rgba(0, 150, 136, 0.2); /* Бирюзовый фон */
-            border-left: 4px solid #2ecc71; 
-        }
-        /* Постпереходные металлы (post_transition_metal) */
-        .category-post-transition-metal { 
-            background: rgba(239, 83, 80, 0.2); /* Светло-красный фон */
-            border-left: 4px solid #e74c3c; 
-        }
-        /* Галогены (halogen) */
-        .category-halogen { 
-            background: rgba(0, 150, 136, 0.2); /* Бирюзовый фон */
-            border-left: 4px solid #1abc9c; 
-        }
-        /* Лантаноиды/Актиноиды (lanthanide, actinide) */
-        .category-lanthanide, .category-actinide { 
-            background: rgba(255, 160, 0, 0.2); /* Оранжево-желтый фон */
-            border-left: 4px solid #f1c40f; 
-        }
-        /* Неизвестная категория (для безопасности) */
-        .category-unknown {
-            background: rgba(100, 100, 100, 0.2);
-            border-left: 4px solid #757575;
-        }
-        /* ========================================================== */
 
-        .search-input {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
+        /* Эффект при наведении */
+        .element-card:hover {
+            transform: translateY(-5px) scale(1.03); 
+            box-shadow: 0 15px 30px rgba(0, 212, 255, 0.5);
         }
-        
-        .search-input:focus {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: var(--accent-blue);
-            box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
-        }
-        
-        .filter-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease;
-        }
-        
-        .filter-btn.active {
-            background: var(--accent-blue);
-            border-color: var(--accent-blue);
-        }
-        
-        .filter-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-        
-        .modal {
-            backdrop-filter: blur(20px);
-            background: rgba(0, 0, 0, 0.8);
-        }
-        
+
+        /* Модальное окно */
         .modal-content {
-            background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background-color: rgba(26, 26, 46, 0.9);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* ========================================================== */
+        /* ЦВЕТА КАТЕГОРИЙ (Улучшение №1: Акцент на левой границе) */
+        /* ========================================================== */
+        .category-nonmetal { border-left-color: #4CAF50; } /* Неметаллы - зеленый */
+        .category-noble-gas { border-left-color: #00BCD4; } /* Благородные газы - голубой */
+        .category-alkali-metal { border-left-color: #FF9800; } /* Щелочные металлы - ярко-оранжевый */
+        .category-alkaline-earth-metal { border-left-color: #FFEB3B; } /* Щелочноземельные металлы - желтый */
+        .category-transition-metal { border-left-color: #673AB7; } /* Переходные металлы - фиолетовый */
+        .category-post-transition-metal { border-left-color: #F44336; } /* Постпереходные металлы - красный */
+        .category-halogen { border-left-color: #009688; } /* Галогены - бирюзовый */
+        .category-lanthanide { border-left-color: #E91E63; } /* Лантаноиды - розовый */
+        .category-actinide { border-left-color: #795548; } /* Актиноиды - коричневый */
+        .category-metalloid { border-left-color: #2196F3; } /* Металлоиды - синий */
+        .category-unknown { border-left-color: #757575; }
+
+        /* Адаптивность для больших таблиц */
+        @media (max-width: 1200px) {
+            .periodic-grid {
+                overflow-x: scroll; 
+                width: 100%;
+                min-width: 1200px;
+            }
         }
     </style>
 </head>
-<body class="text-white">
-    <nav class="p-6">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 bg-gradient-to-r from-blue-400 to-green-400 rounded-lg flex items-center justify-center">
-                    <span class="text-white font-bold text-lg">H</span>
-                </div>
-                <span class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-green-400">HIMIK</span>
-            </div>
-            <div class="hidden md:flex space-x-6">
-                <a href="index.html" class="text-gray-300 hover:text-white transition-colors">Главная</a>
-                <a href="#" class="text-white font-semibold">Обучение</a>
-                <a href="quiz.html" class="text-gray-300 hover:text-white transition-colors">Викторина</a>
-            </div>
-        </div>
-    </nav>
+<body class="p-4">
+    <header class="mb-8">
+        <nav class="flex justify-between items-center pb-4 border-b border-gray-700">
+            <h1 class="text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-accent-blue to-accent-green">
+                <a href="index.html">HIMIK</a>
+            </h1>
+            <a href="quiz.html" class="px-4 py-2 bg-accent-orange text-white rounded-lg hover:bg-opacity-80 transition-colors">
+                Режим Викторины →
+            </a>
+        </nav>
+        <h2 class="text-3xl font-semibold text-center mt-6 text-gray-200">Периодическая Таблица Элементов</h2>
+    </header>
 
-    <main class="max-w-7xl mx-auto px-6 py-8">
-        <div class="text-center mb-12">
-            <h1 class="text-5xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-green-400">Режим обучения</h1>
-            <p class="text-xl text-gray-300 max-w-2xl mx-auto">Изучайте химические элементы через интерактивные карточки с подробной информацией</p>
+    <div class="max-w-xl mx-auto mb-6">
+        <input type="text" id="searchInput" placeholder="Поиск по имени, символу или номеру..." 
+               class="w-full p-3 rounded-lg bg-secondary-bg text-white border border-gray-600 focus:border-accent-blue focus:ring focus:ring-accent-blue/50"
+               onfocus="this.placeholder='Например: Кислород, Fe, 26'">
+    </div>
+
+    <div id="periodicTable" class="periodic-grid mx-auto">
         </div>
 
-        <div class="mb-8">
-            <div class="flex flex-col md:flex-row gap-4 mb-6">
-                <div class="flex-1 relative">
-                    <input 
-                        type="text" 
-                        id="searchInput" 
-                        placeholder="Поиск по названию или символу..." 
-                        class="search-input w-full pl-4 pr-12 py-3 rounded-lg text-white placeholder-gray-400 outline-none"
-                    >
-                    <button onclick="clearSearch()" class="absolute right-0 top-0 h-full px-4 text-gray-400 hover:text-white transition-colors">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                          <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
-                        </svg>
-                    </button>
-                </div>
-                
-                </div>
+    <div id="elementModal" class="fixed inset-0 bg-black bg-opacity-70 hidden justify-center items-center z-50" onclick="closeModal()">
+        <div class="modal-content w-11/12 max-w-lg p-6 rounded-xl shadow-2xl relative" onclick="event.stopPropagation()">
+            <h3 id="modalName" class="text-4xl font-bold mb-2 text-accent-blue"></h3>
+            <p id="modalSymbol" class="text-6xl font-extrabold mb-4"></p>
             
-            <div class="flex flex-wrap gap-3">
-                <button onclick="filterByCategory('all')" class="filter-btn active px-4 py-2 rounded-lg text-sm font-medium">
-                    Все
-                </button>
-                <button onclick="filterByCategory('metal')" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium">
-                    Металлы (Все)
-                </button>
-                <button onclick="filterByCategory('nonmetal_composite')" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium">
-                    Неметаллы (Все)
-                </button>
-                <button onclick="filterByCategory('noble_gas')" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium">
-                    Благородные газы
-                </button>
-                <button onclick="filterByCategory('metalloid')" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium">
-                    Металлоиды
-                </button>
-                <button onclick="filterByCategory('alkali_metal')" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium">
-                    Щелочные металлы
-                </button>
+            <div class="space-y-3 text-lg">
+                <p><strong>Атомный номер:</strong> <span id="modalNumber" class="font-mono"></span></p>
+                <p><strong>Масса:</strong> <span id="modalMass" class="font-mono"></span></p>
+                <p><strong>Период:</strong> <span id="modalPeriod"></span></p>
+                <p><strong>Группа:</strong> <span id="modalGroup"></span></p>
+                <p><strong>Конфигурация:</strong> <span id="modalConfig" class="font-mono text-accent-green"></span></p>
+                <p><strong>Категория:</strong> <span id="modalCategory"></span></p>
+                <p class="mt-4 border-t border-gray-700 pt-4">
+                    <strong>Описание:</strong> <span id="modalDescription" class="text-text-secondary italic"></span>
+                </p>
             </div>
-        </div>
-
-        <div id="elementsGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-6">
-            </div>
-
-        <div id="noResults" class="hidden text-center py-12">
-            <div class="text-6xl mb-4 text-gray-400">🔍</div>
-            <h3 class="text-2xl font-semibold mb-2">Элементы не найдены</h3>
-            <p class="text-gray-400">Попробуйте изменить параметры поиска или фильтры</p>
-        </div>
-    </main>
-
-    <div id="elementModal" class="modal fixed inset-0 z-50 hidden items-center justify-center p-4">
-        <div class="modal-content rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div class="p-8">
-                <div class="flex justify-between items-start mb-6">
-                    <div>
-                        <div id="modalSymbol" class="element-symbol text-6xl font-bold mb-2"></div>
-                        <h2 id="modalName" class="text-3xl font-bold mb-2"></h2>
-                        <p id="modalNameEn" class="text-gray-400 text-lg"></p>
-                    </div>
-                    <button onclick="closeModal()" class="text-gray-400 hover:text-white text-4xl leading-none">×</button>
-                </div>
-                
-                <div class="grid md:grid-cols-2 gap-6">
-                    <div>
-                        <h3 class="text-xl font-semibold mb-4 text-blue-400">Основная информация</h3>
-                        <div class="space-y-3">
-                            <div class="flex justify-between">
-                                <span class="text-gray-400">Атомный номер:</span>
-                                <span id="modalAtomicNumber" class="font-semibold"></span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-gray-400">Атомная масса:</span>
-                                <span id="modalMass" class="font-semibold"></span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-gray-400">Период:</span>
-                                <span id="modalPeriod" class="font-semibold"></span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-gray-400">Группа:</span>
-                                <span id="modalGroup" class="font-semibold"></span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <h3 class="text-xl font-semibold mb-4 text-green-400">Электронная структура</h3>
-                        <div class="space-y-3">
-                            <div class="flex justify-between items-center">
-                                <span class="text-gray-400">Конфигурация:</span>
-                                <span id="modalElectronConfig" class="font-mono font-semibold text-sm sm:text-base text-right"></span> 
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-gray-400">Категория:</span>
-                                <span id="modalCategory" class="font-semibold"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="mt-6 border-t border-gray-700 pt-6">
-                    <h3 class="text-xl font-semibold mb-4 text-orange-400">Описание</h3>
-                    <p id="modalDescription" class="text-gray-300 leading-relaxed"></p>
-                </div>
-            </div>
+            
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors text-2xl">
+                &times;
+            </button>
         </div>
     </div>
 
     <script>
-        let allElements = [];
-        let currentCategory = 'all';
+        let elements = [];
+        let filteredElements = [];
 
-        // =================================================================
-        // FALLBACK DATA: Используется, если не удалось загрузить elements.json
-        // =================================================================
-        const fallbackElements = [
-            { "atomic_number": 1, "symbol": "H", "name_ru": "Водород", "name_en": "Hydrogen", "mass": 1.008, "category": "nonmetal", "period": 1, "group": 1, "electron_configuration": "1s¹", "description": "Самый легкий элемент" },
-            { "atomic_number": 2, "symbol": "He", "name_ru": "Гелий", "name_en": "Helium", "mass": 4.0026, "category": "noble_gas", "period": 1, "group": 18, "electron_configuration": "1s²", "description": "Инертный газ" },
-            { "atomic_number": 6, "symbol": "C", "name_ru": "Углерод", "name_en": "Carbon", "mass": 12.011, "category": "nonmetal", "period": 2, "group": 14, "electron_configuration": "[He] 2s² 2p²", "description": "Основа органической химии" },
-            { "atomic_number": 11, "symbol": "Na", "name_ru": "Натрий", "name_en": "Sodium", "mass": 22.990, "category": "alkali_metal", "period": 3, "group": 1, "electron_configuration": "[Ne] 3s¹", "description": "Щелочной металл" },
-            { "atomic_number": 26, "symbol": "Fe", "name_ru": "Железо", "name_en": "Iron", "mass": 55.845, "category": "transition_metal", "period": 4, "group": 8, "electron_configuration": "[Ar] 3d⁶ 4s²", "description": "Важный металл" },
-            { "atomic_number": 79, "symbol": "Au", "name_ru": "Золото", "name_en": "Gold", "mass": 196.967, "category": "transition_metal", "period": 6, "group": 11, "electron_configuration": "[Xe] 4f¹⁴ 5d¹⁰ 6s¹", "description": "Драгоценный металл" }
-        ];
-
-        // Получение названия категории на русском
-        function getCategoryName(category) {
-            const categories = {
-                'nonmetal': 'Неметалл',
-                'noble_gas': 'Благородный газ',
-                'alkali_metal': 'Щелочной металл',
-                'alkaline_earth': 'Щелочноземельный металл',
-                'transition_metal': 'Переходный металл',
-                'metalloid': 'Металлоид',
-                'post_transition_metal': 'Постпереходный металл',
-                'halogen': 'Галоген',
-                'lanthanide': 'Лантаноид',
-                'actinide': 'Актиноид'
-            };
-            return categories[category] || category.replace(/_/g, ' ');
-        }
-        
-        // Вспомогательная функция для определения металлов (объединенная категория)
-        function isMetal(element) {
-            const metalCategories = [
-                'alkali_metal', 
-                'alkaline_earth', 
-                'transition_metal', 
-                'post_transition_metal', 
-                'lanthanide', 
-                'actinide'
-            ];
-            return metalCategories.includes(element.category);
+        // Функция загрузки элементов
+        function loadElements() {
+            fetch('elements.json')
+                .then(response => response.json())
+                .then(data => {
+                    elements = data;
+                    filteredElements = data;
+                    renderTable(elements);
+                })
+                .catch(error => {
+                    console.error('Ошибка загрузки элементов:', error);
+                    document.getElementById('periodicTable').innerHTML = '<p class="text-center text-red-500">Не удалось загрузить данные об элементах. Проверьте elements.json.</p>';
+                });
         }
 
-        // Загрузка элементов
-        async function loadElements() {
-            try {
-                const response = await fetch('elements.json');
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-                
-                // Исключаем элементы без категории или с ошибкой
-                allElements = data.filter(e => e.category);
-                
-                if (allElements.length === 0) {
-                     throw new Error("Файл elements.json пуст или имеет неверный формат.");
-                }
-
-                console.log('Элементы успешно загружены из elements.json');
-            } catch (error) {
-                console.error('Ошибка загрузки данных из elements.json. Использование резервного массива.', error);
-                
-                allElements = fallbackElements;
-                
-                const grid = document.getElementById('elementsGrid');
-                if(grid) {
-                    grid.innerHTML = '<div class="col-span-full text-center p-4 bg-red-800/30 border border-red-600 rounded-lg"><p class="text-xl font-bold text-yellow-400">⚠️ Предупреждение о загрузке данных</p><p class="text-sm text-gray-300">Не удалось загрузить полный список элементов (elements.json). Запустите страницу через локальный веб-сервер (Live Server).</p></div>';
-                }
-            }
-
-            // Устанавливаем активный класс для "Все" и рендерим
-            document.querySelector('.filter-btn[onclick*="filterByCategory(\'all\')"]').classList.add('active');
-            searchElements(); 
-        }
-
-        // Очистка поиска и повторный запуск фильтрации
-        function clearSearch() {
-            document.getElementById('searchInput').value = '';
-            searchElements();
-        }
-
-        // Основная функция поиска и фильтрации
-        function searchElements() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
-            let filtered = allElements;
-
-            // 1. Фильтрация по текущей категории
-            if (currentCategory !== 'all') {
-                if (currentCategory === 'metal') {
-                    // Все металлы
-                    filtered = filtered.filter(isMetal);
-                } else if (currentCategory === 'nonmetal_composite') {
-                    // Все неметаллы (неметаллы + благородные газы + галогены)
-                    filtered = filtered.filter(e => e.category === 'nonmetal' || e.category === 'noble_gas' || e.category === 'halogen');
-                } else {
-                    // Одна конкретная категория
-                    filtered = filtered.filter(element => element.category === currentCategory);
-                }
-            }
-
-            // 2. Фильтрация по поисковому запросу
-            if (searchTerm) {
-                filtered = filtered.filter(element => 
-                    element.name_ru.toLowerCase().includes(searchTerm) ||
-                    (element.name_en && element.name_en.toLowerCase().includes(searchTerm)) || // Проверка name_en на существование
-                    element.symbol.toLowerCase() === searchTerm
-                );
-            }
-
-            renderElements(filtered);
-        }
-
-        // Установка активного фильтра
-        function filterByCategory(category) {
-            currentCategory = category;
-            
-            // Сброс активного класса со всех кнопок
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            
-            // Установка активного класса на нужную кнопку
-            const activeButton = document.querySelector(`.filter-btn[onclick*="filterByCategory('${category}')"]`);
-            if (activeButton) {
-                activeButton.classList.add('active');
-            }
-
-            // Запуск поиска с новым фильтром
-            searchElements();
-        }
-
-        // Рендеринг карточек элементов
-        function renderElements(elementsToRender) {
-            const grid = document.getElementById('elementsGrid');
-            const noResults = document.getElementById('noResults');
-
-            grid.innerHTML = ''; 
-
-            if (elementsToRender.length === 0) {
-                noResults.classList.remove('hidden');
-                return;
-            }
-
-            noResults.classList.add('hidden');
+        // Функция рендеринга таблицы
+        function renderTable(elementsToRender) {
+            const tableContainer = document.getElementById('periodicTable');
+            tableContainer.innerHTML = '';
 
             elementsToRender.forEach(element => {
-                const card = document.createElement('div');
-                // Замена подчеркивания на дефис для CSS-классов
-                const categoryClass = element.category ? element.category.replace(/_/g, '-') : 'unknown';
+                const elementCard = document.createElement('div');
                 
-                card.className = `element-card rounded-xl p-6 shadow-xl category-${categoryClass}`;
-                card.setAttribute('onclick', `showModal(${element.atomic_number})`);
-                
-                // Проверка и форматирование массы
-                const massDisplay = element.mass ? element.mass.toFixed(3) : '—';
+                // 1. Логика цветового кодирования: 
+                // Заменяем подчеркивания '_' на тире '-' для CSS-классов
+                const categoryClassName = `category-${element.category.replace(/_/g, '-')}`;
 
-                card.innerHTML = `
-                    <div class="text-xs text-gray-400 mb-1">${element.atomic_number}</div>
-                    <div class="element-symbol text-4xl font-bold mb-2">${element.symbol}</div>
-                    <div class="text-lg font-semibold">${element.name_ru}</div>
-                    <div class="text-sm text-gray-400">${massDisplay}</div>
+                // 2. Добавление всех классов
+                elementCard.className = `element-card p-2 text-center text-white ${categoryClassName}`; 
+                
+                elementCard.onclick = () => openModal(element);
+
+                // 3. Содержимое карточки
+                elementCard.innerHTML = `
+                    <div class="element-number text-xs text-gray-400">${element.atomic_number}</div>
+                    <div class="element-symbol text-3xl font-bold">${element.symbol}</div>
+                    <div class="element-mass text-xs text-gray-400">${element.mass}</div>
+                    <div class="element-name text-xs">${element.name_ru}</div>
                 `;
-                grid.appendChild(card);
+
+                // 4. Логика позиционирования в сетке
+                let gridRow = element.period;
+                let gridColumn = element.group;
+
+                // Корректировка позиционирования f-элементов (Лантаноиды и Актиноиды)
+                if (element.category === 'lanthanide') {
+                    gridRow = 8;
+                    // Рассчитываем колонку для f-блока
+                    gridColumn = element.atomic_number - 54 + 2; 
+                } else if (element.category === 'actinide') {
+                    gridRow = 9;
+                    gridColumn = element.atomic_number - 86 + 2; 
+                }
+                
+                // Проверка на корректность данных
+                if (gridRow > 0 && gridColumn > 0) {
+                    elementCard.style.gridRow = gridRow;
+                    elementCard.style.gridColumn = gridColumn;
+                    tableContainer.appendChild(elementCard);
+                }
             });
         }
 
-        // Отображение модального окна
-        function showModal(atomicNumber) {
-            const element = allElements.find(e => e.atomic_number === atomicNumber);
-            if (!element) return;
-            
-            document.getElementById('modalSymbol').textContent = element.symbol || '—';
-            document.getElementById('modalName').textContent = element.name_ru || '—';
-            document.getElementById('modalNameEn').textContent = element.name_en || '—';
-            document.getElementById('modalAtomicNumber').textContent = element.atomic_number || '—';
-            document.getElementById('modalMass').textContent = element.mass ? element.mass.toFixed(4) : '—';
-            document.getElementById('modalPeriod').textContent = element.period || '—';
-            document.getElementById('modalGroup').textContent = element.group || '—';
-            document.getElementById('modalCategory').textContent = getCategoryName(element.category) || '—';
-            
-            // ИСПРАВЛЕНО: Правильный ID для конфигурации
-            document.getElementById('modalElectronConfig').textContent = element.electron_configuration || 'N/A';
-            
-            document.getElementById('modalDescription').textContent = element.description || 'Нет описания.';
-
+        // Функция поиска элементов
+        function searchElements(event) {
+            const searchTerm = event.target.value.toLowerCase();
+            const results = elements.filter(element => {
+                return element.name_ru.toLowerCase().includes(searchTerm) ||
+                       element.symbol.toLowerCase().includes(searchTerm) ||
+                       element.atomic_number.toString().includes(searchTerm);
+            });
+            renderTable(results);
+        }
+        
+        // Открытие модального окна
+        function openModal(element) {
+            document.getElementById('modalName').textContent = element.name_ru;
+            document.getElementById('modalSymbol').textContent = element.symbol;
+            document.getElementById('modalNumber').textContent = element.atomic_number;
+            document.getElementById('modalMass').textContent = element.mass;
+            document.getElementById('modalPeriod').textContent = element.period;
+            document.getElementById('modalGroup').textContent = element.group;
+            document.getElementById('modalConfig').textContent = element.electron_configuration;
+            // Делаем имя категории читабельным
+            document.getElementById('modalCategory').textContent = element.category.replace(/_/g, ' '); 
+            document.getElementById('modalDescription').textContent = element.description;
 
             document.getElementById('elementModal').classList.remove('hidden');
             document.getElementById('elementModal').classList.add('flex');
@@ -473,37 +230,22 @@
             document.getElementById('elementModal').classList.remove('flex');
         }
 
-        // Инициализация
+        // Инициализация и слушатели событий
         document.addEventListener('DOMContentLoaded', function() {
             loadElements();
-            
-            // Поиск в реальном времени
             document.getElementById('searchInput').addEventListener('input', searchElements);
             
-            // Закрытие модального окна по клавише Escape
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') {
                     closeModal();
                 }
             });
             
-            // Закрытие модального окна по клику вне его
             document.getElementById('elementModal').addEventListener('click', function(e) {
                 if (e.target === this) {
                     closeModal();
                 }
             });
-        });
-    </script>
-    <script>
-        document.addEventListener('keydown', e => {
-            if (e.key === 'ArrowRight' || e.key === ' ') {
-                e.preventDefault();
-                window.parent.postMessage('go-next', '*');
-            } else if (e.key === 'ArrowLeft') {
-                e.preventDefault();
-                window.parent.postMessage('go-prev', '*');
-            }
         });
     </script>
 </body>

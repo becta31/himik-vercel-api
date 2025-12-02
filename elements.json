@@ -9,7 +9,55 @@
         "period": 1,
         "group": 1,
         "electron_configuration": "1s¹",
-        "description": "Самый легкий элемент"
+        "description": "Самый распространенный элемент во Вселенной."
+    },
+    {
+        "atomic_number": 2,
+        "symbol": "He",
+        "name_ru": "Гелий",
+        "name_en": "Helium",
+        "mass": 4.003,
+        "category": "noble_gas",
+        "period": 1,
+        "group": 18,
+        "electron_configuration": "1s²",
+        "description": "Второй по легкости элемент, не горит."
+    },
+    {
+        "atomic_number": 3,
+        "symbol": "Li",
+        "name_ru": "Литий",
+        "name_en": "Lithium",
+        "mass": 6.941,
+        "category": "alkali_metal",
+        "period": 2,
+        "group": 1,
+        "electron_configuration": "[He] 2s¹",
+        "description": "Самый легкий металл, используется в батареях."
+    },
+    {
+        "atomic_number": 4,
+        "symbol": "Be",
+        "name_ru": "Бериллий",
+        "name_en": "Beryllium",
+        "mass": 9.012,
+        "category": "alkaline_earth_metal",
+        "period": 2,
+        "group": 2,
+        "electron_configuration": "[He] 2s²",
+        "description": "Твердый металл, прозрачен для рентгеновских лучей."
+    },
+    {
+        "atomic_number": 5,
+        "symbol": "B",
+        "name_ru": "Бор",
+        "name_en": "Boron",
+        "mass": 10.811,
+        "category": "metalloid",
+        "period": 2,
+        "group": 13,
+        "electron_configuration": "[He] 2s² 2p¹",
+        "description": "Важен для роста растений, используется в жаропрочном стекле."
     },
     {
         "atomic_number": 6,
@@ -21,7 +69,19 @@
         "period": 2,
         "group": 14,
         "electron_configuration": "[He] 2s² 2p²",
-        "description": "Основа органической химии"
+        "description": "Основа всей жизни на Земле (органика)."
+    },
+    {
+        "atomic_number": 7,
+        "symbol": "N",
+        "name_ru": "Азот",
+        "name_en": "Nitrogen",
+        "mass": 14.007,
+        "category": "nonmetal",
+        "period": 2,
+        "group": 15,
+        "electron_configuration": "[He] 2s² 2p³",
+        "description": "Составляет 78% атмосферы Земли."
     },
     {
         "atomic_number": 8,
@@ -33,7 +93,31 @@
         "period": 2,
         "group": 16,
         "electron_configuration": "[He] 2s² 2p⁴",
-        "description": "Необходим для дыхания"
+        "description": "Необходим для дыхания и горения."
+    },
+    {
+        "atomic_number": 9,
+        "symbol": "F",
+        "name_ru": "Фтор",
+        "name_en": "Fluorine",
+        "mass": 18.998,
+        "category": "halogen",
+        "period": 2,
+        "group": 17,
+        "electron_configuration": "[He] 2s² 2p⁵",
+        "description": "Самый химически активный неметалл."
+    },
+    {
+        "atomic_number": 10,
+        "symbol": "Ne",
+        "name_ru": "Неон",
+        "name_en": "Neon",
+        "mass": 20.180,
+        "category": "noble_gas",
+        "period": 2,
+        "group": 18,
+        "electron_configuration": "[He] 2s² 2p⁶",
+        "description": "Инертный газ, ярко светится красным в трубках."
     },
     {
         "atomic_number": 11,
@@ -45,7 +129,175 @@
         "period": 3,
         "group": 1,
         "electron_configuration": "[Ne] 3s¹",
-        "description": "Щелочной металл"
+        "description": "Мягкий металл, компонент поваренной соли."
+    },
+    {
+        "atomic_number": 12,
+        "symbol": "Mg",
+        "name_ru": "Магний",
+        "name_en": "Magnesium",
+        "mass": 24.305,
+        "category": "alkaline_earth_metal",
+        "period": 3,
+        "group": 2,
+        "electron_configuration": "[Ne] 3s²",
+        "description": "Легкий металл, горит ярким белым пламенем."
+    },
+    {
+        "atomic_number": 13,
+        "symbol": "Al",
+        "name_ru": "Алюминий",
+        "name_en": "Aluminium",
+        "mass": 26.982,
+        "category": "post_transition_metal",
+        "period": 3,
+        "group": 13,
+        "electron_configuration": "[Ne] 3s² 3p¹",
+        "description": "Самый распространенный металл в земной коре."
+    },
+    {
+        "atomic_number": 14,
+        "symbol": "Si",
+        "name_ru": "Кремний",
+        "name_en": "Silicon",
+        "mass": 28.085,
+        "category": "metalloid",
+        "period": 3,
+        "group": 14,
+        "electron_configuration": "[Ne] 3s² 3p²",
+        "description": "Основной материал для микросхем и электроники."
+    },
+    {
+        "atomic_number": 15,
+        "symbol": "P",
+        "name_ru": "Фосфор",
+        "name_en": "Phosphorus",
+        "mass": 30.974,
+        "category": "nonmetal",
+        "period": 3,
+        "group": 15,
+        "electron_configuration": "[Ne] 3s² 3p³",
+        "description": "Светится в темноте, входит в состав ДНК."
+    },
+    {
+        "atomic_number": 16,
+        "symbol": "S",
+        "name_ru": "Сера",
+        "name_en": "Sulfur",
+        "mass": 32.065,
+        "category": "nonmetal",
+        "period": 3,
+        "group": 16,
+        "electron_configuration": "[Ne] 3s² 3p⁴",
+        "description": "Желтое вещество с резким запахом при горении."
+    },
+    {
+        "atomic_number": 17,
+        "symbol": "Cl",
+        "name_ru": "Хлор",
+        "name_en": "Chlorine",
+        "mass": 35.453,
+        "category": "halogen",
+        "period": 3,
+        "group": 17,
+        "electron_configuration": "[Ne] 3s² 3p⁵",
+        "description": "Ядовитый газ, используется для дезинфекции воды."
+    },
+    {
+        "atomic_number": 18,
+        "symbol": "Ar",
+        "name_ru": "Аргон",
+        "name_en": "Argon",
+        "mass": 39.948,
+        "category": "noble_gas",
+        "period": 3,
+        "group": 18,
+        "electron_configuration": "[Ne] 3s² 3p⁶",
+        "description": "Инертный газ, используется в лампочках и сварке."
+    },
+    {
+        "atomic_number": 19,
+        "symbol": "K",
+        "name_ru": "Калий",
+        "name_en": "Potassium",
+        "mass": 39.098,
+        "category": "alkali_metal",
+        "period": 4,
+        "group": 1,
+        "electron_configuration": "[Ar] 4s¹",
+        "description": "Важен для работы нервной системы."
+    },
+    {
+        "atomic_number": 20,
+        "symbol": "Ca",
+        "name_ru": "Кальций",
+        "name_en": "Calcium",
+        "mass": 40.078,
+        "category": "alkaline_earth_metal",
+        "period": 4,
+        "group": 2,
+        "electron_configuration": "[Ar] 4s²",
+        "description": "Основной строительный элемент костей и зубов."
+    },
+    {
+        "atomic_number": 21,
+        "symbol": "Sc",
+        "name_ru": "Скандий",
+        "name_en": "Scandium",
+        "mass": 44.956,
+        "category": "transition_metal",
+        "period": 4,
+        "group": 3,
+        "electron_configuration": "[Ar] 3d¹ 4s²",
+        "description": "Легкий металл, используется в аэрокосмических сплавах."
+    },
+    {
+        "atomic_number": 22,
+        "symbol": "Ti",
+        "name_ru": "Титан",
+        "name_en": "Titanium",
+        "mass": 47.867,
+        "category": "transition_metal",
+        "period": 4,
+        "group": 4,
+        "electron_configuration": "[Ar] 3d² 4s²",
+        "description": "Очень прочный и легкий, не ржавеет."
+    },
+    {
+        "atomic_number": 23,
+        "symbol": "V",
+        "name_ru": "Ванадий",
+        "name_en": "Vanadium",
+        "mass": 50.942,
+        "category": "transition_metal",
+        "period": 4,
+        "group": 5,
+        "electron_configuration": "[Ar] 3d³ 4s²",
+        "description": "Делает сталь более прочной и упругой."
+    },
+    {
+        "atomic_number": 24,
+        "symbol": "Cr",
+        "name_ru": "Хром",
+        "name_en": "Chromium",
+        "mass": 51.996,
+        "category": "transition_metal",
+        "period": 4,
+        "group": 6,
+        "electron_configuration": "[Ar] 3d⁵ 4s¹",
+        "description": "Используется для блестящего покрытия металлов."
+    },
+    {
+        "atomic_number": 25,
+        "symbol": "Mn",
+        "name_ru": "Марганец",
+        "name_en": "Manganese",
+        "mass": 54.938,
+        "category": "transition_metal",
+        "period": 4,
+        "group": 7,
+        "electron_configuration": "[Ar] 3d⁵ 4s²",
+        "description": "Важен для производства стали и в биологии."
     },
     {
         "atomic_number": 26,
@@ -57,54 +309,54 @@
         "period": 4,
         "group": 8,
         "electron_configuration": "[Ar] 3d⁶ 4s²",
-        "description": "Важный металл"
-    },
-	{
-        "atomic_number": 2,
-        "symbol": "He",
-        "name_ru": "Гелий",
-        "name_en": "Helium",
-        "mass": 4.003,
-        "category": "noble_gas",
-        "period": 1,
-        "group": 18,
-        "electron_configuration": "1s²",
-        "description": "Инертный газ, легче воздуха. Используется в воздушных шарах и криогенике."
+        "description": "Самый важный металл для промышленности."
     },
     {
-        "atomic_number": 88,
-        "symbol": "Ra",
-        "name_ru": "Радий",
-        "name_en": "Radium",
-        "mass": 226.025,
-        "category": "alkaline_earth_metal",
-        "period": 7,
-        "group": 2,
-        "electron_configuration": "[Rn] 7s²",
-        "description": "Сильно радиоактивный щелочноземельный металл. Был открыт Марией и Пьером Кюри."
-    },
-    {
-        "atomic_number": 92,
-        "symbol": "U",
-        "name_ru": "Уран",
-        "name_en": "Uranium",
-        "mass": 238.029,
-        "category": "actinide",
-        "period": 7,
-        "group": 3,
-        "electron_configuration": "[Rn] 5f³ 6d¹ 7s²",
-        "description": "Тяжелый радиоактивный металл, основной источник топлива для атомной энергетики."
-    },
-    {
-        "atomic_number": 79,
-        "symbol": "Au",
-        "name_ru": "Золото",
-        "name_en": "Gold",
-        "mass": 196.967,
+        "atomic_number": 27,
+        "symbol": "Co",
+        "name_ru": "Кобальт",
+        "name_en": "Cobalt",
+        "mass": 58.933,
         "category": "transition_metal",
-        "period": 6,
+        "period": 4,
+        "group": 9,
+        "electron_configuration": "[Ar] 3d⁷ 4s²",
+        "description": "Используется в суперсплавах и магнитах."
+    },
+    {
+        "atomic_number": 28,
+        "symbol": "Ni",
+        "name_ru": "Никель",
+        "name_en": "Nickel",
+        "mass": 58.693,
+        "category": "transition_metal",
+        "period": 4,
+        "group": 10,
+        "electron_configuration": "[Ar] 3d⁸ 4s²",
+        "description": "Устойчив к коррозии, используется в монетах."
+    },
+    {
+        "atomic_number": 29,
+        "symbol": "Cu",
+        "name_ru": "Медь",
+        "name_en": "Copper",
+        "mass": 63.546,
+        "category": "transition_metal",
+        "period": 4,
         "group": 11,
-        "electron_configuration": "[Xe] 4f¹⁴ 5d¹⁰ 6s¹",
-        "description": "Драгоценный металл"
+        "electron_configuration": "[Ar] 3d¹⁰ 4s¹",
+        "description": "Отличный проводник электричества красного цвета."
+    },
+    {
+        "atomic_number": 30,
+        "symbol": "Zn",
+        "name_ru": "Цинк",
+        "name_en": "Zinc",
+        "mass": 65.38,
+        "category": "transition_metal",
+        "period": 4,
+        "group": 12,
+        "electron_configuration": "[Ar] 3d¹⁰ 4s²",
+        "description": "Используется для оцинковки стали (защита от ржавчины)."
     }
 ]

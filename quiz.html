@@ -112,10 +112,11 @@
                 <span class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-green-600">HIMIK</span>
             </div>
             <div class="hidden md:flex space-x-6">
-                <a href="index.html" class="text-gray-300 hover:text-white transition-colors">Главная</a>
-                <a href="study.html" class="text-gray-300 hover:text-white transition-colors">Обучение</a>
-                <a href="#" class="text-white font-semibold">Викторина</a>
-            </div>
+    <a href="index.html" class="text-gray-300 hover:text-white transition-colors">Главная</a>
+    <a href="study.html" class="text-gray-300 hover:text-white transition-colors">Обучение</a>
+    <a href="quiz.html" class="text-gray-300 hover:text-white transition-colors">Викторина</a>
+    <a href="quiz.html?show=leaderboard" class="text-gray-300 hover:text-white transition-colors">Рейтинг</a>
+</div>
         </div>
     </nav>
 
@@ -635,17 +636,20 @@
 
         // Инициализация
         document.addEventListener('DOMContentLoaded', function() {
-            loadElements();
-        });
+    loadElements();
+    checkUrlParameters(); // <-- НОВЫЙ ВЫЗОВ
+});
 
-        // Немедленная инициализация если DOM уже загружен
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', function() {
-                loadElements();
-            });
-        } else {
-            loadElements();
-        }
+// Немедленная инициализация если DOM уже загружен
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+        loadElements();
+        checkUrlParameters(); // <-- НОВЫЙ ВЫЗОВ
+    });
+} else {
+    loadElements();
+    checkUrlParameters(); // <-- НОВЫЙ ВЫЗОВ
+}
     </script>
 <script>
     document.addEventListener('keydown', e => {

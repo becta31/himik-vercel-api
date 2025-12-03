@@ -542,7 +542,7 @@ const table = document.getElementById('leaderboardTable');
 
 loading.classList.remove('hidden');
 errorElement.classList.add('hidden');
-table.classList.add('hidden'); // Скрываем таблицу во время загрузки
+table.classList.add('hidden');
 tableBody.innerHTML = '';
 
 try {
@@ -553,18 +553,20 @@ try {
         let html = '';
         data.results.forEach((result, index) => {
             const rank = index + 1;
-            let rowClass = 'hover:bg-gray-700/50'; // Базовый класс
+            // 💡 ИЗМЕНЕНИЕ: Уменьшенная прозрачность для базового ховера (с 50 на 30)
+            let rowClass = 'hover:bg-gray-700/30';
 
             // 🌟 ЛОГИКА ВЫДЕЛЕНИЯ ТРОЙКИ ЛИДЕРОВ
+            // 💡 ИЗМЕНЕНИЕ: Используем минимальную прозрачность /20 и более светлый текст
             if (rank === 1) {
-                // Золото: ярко-желтый фон, желтый текст
-                rowClass = 'bg-yellow-800/50 text-yellow-300 font-bold hover:bg-yellow-800/70';
+                // Золото: фон /20, текст-желтый-300
+                rowClass = 'bg-yellow-700/20 text-yellow-300 font-bold hover:bg-yellow-700/40';
             } else if (rank === 2) {
-                // Серебро: светло-серый фон, белый текст
-                rowClass = 'bg-gray-600/50 text-gray-200 font-semibold hover:bg-gray-600/70';
+                // Серебро: фон /20, текст-серый-300
+                rowClass = 'bg-gray-500/20 text-gray-300 font-semibold hover:bg-gray-500/40';
             } else if (rank === 3) {
-                // Бронза: коричневый/оранжевый фон, светло-оранжевый текст
-                rowClass = 'bg-orange-800/50 text-orange-300 font-semibold hover:bg-orange-800/70';
+                // Бронза: фон /20, текст-оранжевый-300
+                rowClass = 'bg-orange-700/20 text-orange-300 font-semibold hover:bg-orange-700/40';
             }
 
             html += `

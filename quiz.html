@@ -188,7 +188,24 @@
                 </div>
             </div>
 
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <div id="leaderboardCard" class="quiz-card rounded-2xl p-8 mt-6">
+                <h3 class="text-2xl font-bold mb-4 text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-green-600">🏆 Таблица лидеров (ТОП-10)</h3>
+                <table class="w-full text-left border-collapse" id="leaderboardTable">
+                    <thead>
+                        <tr>
+                            <th class="py-2 border-b-2 border-gray-600">Место</th>
+                            <th class="py-2 border-b-2 border-gray-600">Очки</th>
+                            <th class="py-2 border-b-2 border-gray-600">Правильно</th>
+                            <th class="py-2 border-b-2 border-gray-600">Стрик</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboardBody">
+                        </tbody>
+                </table>
+                <div id="leaderboardLoading" class="text-center text-gray-400 mt-4 hidden">Загрузка лучших результатов...</div>
+                <div id="leaderboardError" class="text-center text-red-400 mt-4 hidden">Не удалось загрузить таблицу лидеров.</div>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center mt-8">
                 <button onclick="restartQuiz()" class="px-8 py-3 bg-gradient-to-r from-blue-600 to-green-600 rounded-lg font-semibold hover:from-blue-700 hover:to-green-700 transition-all">
                     Попробовать снова
                 </button>
@@ -219,6 +236,10 @@
             'name_to_mass',
             'electron_config'
         ];
+
+        // !!! НОВАЯ КОНСТАНТА: URL для получения результатов
+        const TOP_RESULTS_API_URL = 'https://himik-vercel-api.vercel.app/api/get-top-results';
+        // !!! КОНЕЦ НОВОЙ КОНСТАНТЫ
 
         // Загрузка данных
         async function loadElements() {
@@ -525,6 +546,52 @@
             document.getElementById('progressBar').style.width = progress + '%';
         }
 
+
+        // !!! НОВАЯ ФУНКЦИЯ: Загрузка и отображение таблицы лидеров
+        async function loadLeaderboard() {
+            const loading = document.getElementById('leaderboardLoading');
+            const errorElement = document.getElementById('leaderboardError');
+            const tableBody = document.getElementById('leaderboardBody');
+            const table = document.getElementById('leaderboardTable');
+
+            loading.classList.remove('hidden');
+            errorElement.classList.add('hidden');
+            table.classList.add('hidden');
+            tableBody.innerHTML = '';
+
+            try {
+                const response = await fetch(TOP_RESULTS_API_URL);
+                const data = await response.json();
+
+                if (data.success && data.results.length > 0) {
+                    let html = '';
+                    data.results.forEach((result, index) => {
+                        html += `
+                            <tr class="hover:bg-gray-700/50">
+                                <td class="py-2 text-lg font-bold">${index + 1}</td>
+                                <td class="py-2 text-green-400 font-semibold">${result.score}</td>
+                                <td class="py-2">${result.correctAnswers}</td>
+                                <td class="py-2">${result.maxStreak}</td>
+                            </tr>
+                        `;
+                    });
+                    tableBody.innerHTML = html;
+                    table.classList.remove('hidden');
+                } else {
+                    tableBody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-gray-400">Нет сохраненных результатов.</td></tr>';
+                    table.classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки таблицы лидеров:', error);
+                errorElement.classList.remove('hidden');
+                table.classList.add('hidden');
+            } finally {
+                loading.classList.add('hidden');
+            }
+        }
+        // !!! КОНЕЦ НОВОЙ ФУНКЦИИ loadLeaderboard
+
+
         // НОВАЯ ФУНКЦИЯ showResults С ОТПРАВКОЙ ДАННЫХ
         function showResults() {
             // 🛑 ДИАГНОСТИЧЕСКОЕ СООБЩЕНИЕ
@@ -532,6 +599,7 @@
 
             document.getElementById('questionCard').classList.add('hidden');
             document.getElementById('resultsCard').classList.remove('hidden');
+            document.getElementById('leaderboardCard').classList.remove('hidden'); // !!! ПОКАЗЫВАЕМ ТАБЛИЦУ ЛИДЕРОВ
 
             // 1. Отображение результатов на странице
             document.getElementById('finalScore').textContent = score;
@@ -571,9 +639,15 @@
             .then(data => {
                 // Если данные успешно сохранены, это сообщение появится в консоли F12
                 console.log('✅ Результат викторины успешно сохранен:', data);
+
+                // !!! ПОСЛЕ УСПЕШНОГО СОХРАНЕНИЯ: ОБНОВЛЯЕМ ТАБЛИЦУ
+                loadLeaderboard();
             })
             .catch(error => {
                 console.error('❌ Ошибка при отправке результата:', error);
+
+                // !!! ЕСЛИ ПРОИЗОШЛА ОШИБКА СОХРАНЕНИЯ: ВСЕ РАВНО ПОКАЗЫВАЕМ ТАБЛИЦУ
+                loadLeaderboard();
             });
 
             // 🛑 ДИАГНОСТИЧЕСКОЕ СООБЩЕНИЕ
@@ -607,11 +681,13 @@
             if (existingMessage) {
                  existingMessage.remove();
             }
-            resultsCard.insertBefore(messageElement, resultsCard.children[2]);
+            // Вставляем сообщение перед таблицей лидеров
+            resultsCard.insertBefore(messageElement, document.getElementById('leaderboardCard'));
         }
         // Перезапуск викторины
         function restartQuiz() {
             document.getElementById('resultsCard').classList.add('hidden');
+            document.getElementById('leaderboardCard').classList.add('hidden'); // Скрываем таблицу лидеров при перезапуске
             document.getElementById('questionCard').classList.remove('hidden');
             startQuiz();
         }

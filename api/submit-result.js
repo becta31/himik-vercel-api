@@ -49,7 +49,7 @@ export default async (req, res) => {
     try {
         // 4. Подключение к базе данных
         const dbClient = await connectToDatabase();
-        const database = dbClient.db("HIMIK_DB"); // Название базы данных
+        const database = dbClient.db("Cluster0"); // Название базы данных
         const collection = database.collection("QuizResults"); // Название коллекции/таблицы
 
         // 5. Извлечение данных из тела запроса

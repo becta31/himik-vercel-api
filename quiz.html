@@ -525,16 +525,60 @@
             document.getElementById('progressBar').style.width = progress + '%';
         }
 
-        // Показ результатов
+        // НОВАЯ ФУНКЦИЯ showResults С ОТПРАВКОЙ ДАННЫХ
         function showResults() {
             document.getElementById('questionCard').classList.add('hidden');
             document.getElementById('resultsCard').classList.remove('hidden');
 
+            // 1. Отображение результатов на странице
             document.getElementById('finalScore').textContent = score;
             document.getElementById('correctAnswers').textContent = correctAnswers;
             document.getElementById('maxStreak').textContent = maxStreak;
 
-            // Вычисление процента правильных ответов
+            // ----------------------------------------------------------------
+            // 🚀 НОВЫЙ КОД: ОТПРАВКА РЕЗУЛЬТАТА НА VERCEL API
+            // ----------------------------------------------------------------
+
+            // !!! ВАЖНО: Убедитесь, что этот адрес совпадает с адресом вашего Vercel API
+            const VERCEL_API_URL = 'https://himik-vercel-api.vercel.app/api/submit-result';
+
+            // 2. Сбор данных для API
+            const quizData = {
+                score: score,
+                correctAnswers: correctAnswers,
+                maxStreak: maxStreak
+            };
+
+            // 3. Асинхронная отправка данных на Vercel
+            fetch(VERCEL_API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(quizData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    console.error(`Ошибка сервера: ${response.status}. Данные не сохранены.`);
+                    // Попытка прочитать тело ответа, даже если статус 4xx/5xx
+                    return response.json().catch(() => ({ message: 'No JSON body or Network Error' }));
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Если данные успешно сохранены, это сообщение появится в консоли F12
+                console.log('✅ Результат викторины успешно сохранен:', data);
+            })
+            .catch(error => {
+                console.error('❌ Ошибка при отправке результата:', error);
+                // Если вы видите ошибку "Failed to fetch", проверьте CORS и правильность URL.
+            });
+
+            // ----------------------------------------------------------------
+            // КОНЕЦ НОВОГО КОДА
+            // ----------------------------------------------------------------
+
+            // 4. Формирование сообщения о результате (Исходная логика)
             const percentage = Math.round((correctAnswers / TOTAL_QUESTIONS) * 100);
             let message = '';
 
@@ -552,10 +596,10 @@
             const messageElement = document.createElement('p');
             messageElement.className = 'text-lg text-gray-300 mb-6';
             messageElement.textContent = message;
-            // Используем children[2] как точку вставки (после заголовка и подзаголовка)
+
+            // Используем children[2] как точку вставки
             resultsCard.insertBefore(messageElement, resultsCard.children[2]);
         }
-
         // Перезапуск викторины
         function restartQuiz() {
             document.getElementById('resultsCard').classList.add('hidden');

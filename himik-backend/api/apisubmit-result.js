@@ -1,49 +1,67 @@
 // api/submit-result.js
 
-// 1. Импорт клиента MongoDB
 const { MongoClient } = require('mongodb');
 
-// 2. Строка подключения берется из переменной окружения
+// Строка подключения берется из переменной окружения Vercel
 const uri = process.env.MONGO_URI;
-const client = new MongoClient(uri);
+// Используем одну глобальную переменную для клиента
+let client = null;
 
-// 3. Настройка CORS-заголовков (ОЧЕНЬ ВАЖНО)
-// Ваш фронтенд находится на GitHub Pages (другой домен),
-// поэтому Vercel должен явно разрешить ему отправлять запросы.
+// Настройка CORS-заголовков
 const CORS_HEADERS = {
-    'Access-Control-Allow-Origin': '*', // Разрешаем доступ с любого домена (для простоты)
+    // Разрешаем доступ с любого домена
+    'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Content-Type': 'application/json'
+    'Access-Control-Allow-Headers': 'Content-Type, X-Vercel-Forwarded-For'
 };
 
-// 4. Основной обработчик запроса
+// Функция для подключения к базе данных
+async function connectToDatabase() {
+    if (!uri) {
+        throw new Error("MONGO_URI environment variable is not set.");
+    }
+    if (!client) {
+        client = new MongoClient(uri);
+        await client.connect();
+    }
+    return client;
+}
+
+// Основной обработчик запроса
 export default async (req, res) => {
-    // 4а. Обработка OPTIONS-запроса (preflight check от браузера)
+    // 1. Обработка OPTIONS-запроса (preflight check)
     if (req.method === 'OPTIONS') {
         res.writeHead(200, CORS_HEADERS);
         return res.end();
     }
 
-    // Применяем CORS-заголовки к ответу
-    res.writeHead(200, CORS_HEADERS);
+    // 2. Применяем CORS-заголовки к ответу
+    Object.keys(CORS_HEADERS).forEach(key => {
+        res.setHeader(key, CORS_HEADERS[key]);
+    });
 
-    // Разрешаем только POST-запросы
+    // 3. Проверка метода
     if (req.method !== 'POST') {
-        return res.status(405).json({ success: false, message: 'Method Not Allowed' });
+        res.writeHead(405, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: false, message: 'Method Not Allowed' }));
     }
 
     try {
-        // Подключение к базе данных
-        await client.connect();
-        const database = client.db("HIMIK_DB"); // Название базы данных
+        // 4. Подключение к базе данных
+        const dbClient = await connectToDatabase();
+        const database = dbClient.db("HIMIK_DB"); // Название базы данных
         const collection = database.collection("QuizResults"); // Название коллекции/таблицы
 
-        // Извлечение данных из тела запроса
-        // req.body содержит данные, отправленные из quiz.html
+        // 5. Извлечение данных из тела запроса
         const { score, correctAnswers, maxStreak } = req.body;
 
-        // Добавляем метаданные
+        // 6. Валидация данных
+        if (typeof score !== 'number' || typeof correctAnswers !== 'number' || typeof maxStreak !== 'number') {
+             res.writeHead(400, { 'Content-Type': 'application/json' });
+             return res.end(JSON.stringify({ success: false, message: 'Invalid data format' }));
+        }
+
+        // 7. Данные для сохранения
         const resultDocument = {
             score: score,
             correctAnswers: correctAnswers,
@@ -51,16 +69,16 @@ export default async (req, res) => {
             timestamp: new Date()
         };
 
-        // Сохранение в базу
+        // 8. Сохранение в базу
         const result = await collection.insertOne(resultDocument);
 
-        // Успешный ответ
-        res.status(200).json({ success: true, message: 'Result saved', id: result.insertedId });
+        // 9. Успешный ответ
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: true, message: 'Result saved', id: result.insertedId }));
 
     } catch (error) {
         console.error("Database error:", error);
-        res.status(500).json({ success: false, message: 'Internal Server Error', error: error.message });
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'Internal Server Error', error: error.message }));
     }
-    // В Vercel нет необходимости вручную закрывать клиент.
-    // Функция "умирает" после выполнения.
 };

@@ -527,6 +527,9 @@
 
         // НОВАЯ ФУНКЦИЯ showResults С ОТПРАВКОЙ ДАННЫХ
         function showResults() {
+            // 🛑 ДИАГНОСТИЧЕСКОЕ СООБЩЕНИЕ
+            console.log('--- START: showResults() function fired. ---');
+
             document.getElementById('questionCard').classList.add('hidden');
             document.getElementById('resultsCard').classList.remove('hidden');
 
@@ -536,7 +539,7 @@
             document.getElementById('maxStreak').textContent = maxStreak;
 
             // ----------------------------------------------------------------
-            // 🚀 НОВЫЙ КОД: ОТПРАВКА РЕЗУЛЬТАТА НА VERCEL API
+            // 🚀 КОД ДЛЯ ОТПРАВКИ РЕЗУЛЬТАТА НА VERCEL API
             // ----------------------------------------------------------------
 
             // !!! ВАЖНО: Убедитесь, что этот адрес совпадает с адресом вашего Vercel API
@@ -571,8 +574,10 @@
             })
             .catch(error => {
                 console.error('❌ Ошибка при отправке результата:', error);
-                // Если вы видите ошибку "Failed to fetch", проверьте CORS и правильность URL.
             });
+
+            // 🛑 ДИАГНОСТИЧЕСКОЕ СООБЩЕНИЕ
+            console.log('--- END: Fetch request sent (or failed to send). ---');
 
             // ----------------------------------------------------------------
             // КОНЕЦ НОВОГО КОДА
@@ -598,6 +603,10 @@
             messageElement.textContent = message;
 
             // Используем children[2] как точку вставки
+            const existingMessage = resultsCard.querySelector('.text-lg.text-gray-300.mb-6');
+            if (existingMessage) {
+                 existingMessage.remove();
+            }
             resultsCard.insertBefore(messageElement, resultsCard.children[2]);
         }
         // Перезапуск викторины

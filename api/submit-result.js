@@ -2,24 +2,18 @@
 
 const { MongoClient } = require('mongodb');
 
-// Строка подключения берется из переменной окружения Vercel
 const uri = process.env.MONGO_URI;
-// Используем одну глобальную переменную для клиента
 let client = null;
 
-// Настройка CORS-заголовков
+// ... (Остальной код и CORS_HEADERS остаются без изменений)
 const CORS_HEADERS = {
-    // Разрешаем доступ с любого домена
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type, X-Vercel-Forwarded-For'
 };
+// ...
 
-// Функция для подключения к базе данных
 async function connectToDatabase() {
-    if (!uri) {
-        throw new Error("MONGO_URI environment variable is not set.");
-    }
     if (!client) {
         client = new MongoClient(uri);
         await client.connect();
@@ -27,54 +21,49 @@ async function connectToDatabase() {
     return client;
 }
 
-// Основной обработчик запроса
 export default async (req, res) => {
-    // 1. Обработка OPTIONS-запроса (preflight check)
+    // 1. Обработка CORS preflight
     if (req.method === 'OPTIONS') {
         res.writeHead(200, CORS_HEADERS);
         return res.end();
     }
 
-    // 2. Применяем CORS-заголовки к ответу
+    // Применяем CORS-заголовки к ответу
     Object.keys(CORS_HEADERS).forEach(key => {
         res.setHeader(key, CORS_HEADERS[key]);
     });
 
-    // 3. Проверка метода
     if (req.method !== 'POST') {
         res.writeHead(405, { 'Content-Type': 'application/json' });
         return res.end(JSON.stringify({ success: false, message: 'Method Not Allowed' }));
     }
 
     try {
-        // 4. Подключение к базе данных
-        const dbClient = await connectToDatabase();
-        const database = dbClient.db("Cluster0"); // Название базы данных
-        const collection = database.collection("QuizResults"); // Название коллекции/таблицы
+        const quizData = req.body;
 
-        // 5. Извлечение данных из тела запроса
-        const { score, correctAnswers, maxStreak } = req.body;
-
-        // 6. Валидация данных
-        if (typeof score !== 'number' || typeof correctAnswers !== 'number' || typeof maxStreak !== 'number') {
-             res.writeHead(400, { 'Content-Type': 'application/json' });
-             return res.end(JSON.stringify({ success: false, message: 'Invalid data format' }));
+        // Проверка необходимых полей
+        if (!quizData || typeof quizData.score === 'undefined' || typeof quizData.correctAnswers === 'undefined' || typeof quizData.maxStreak === 'undefined') {
+            res.writeHead(400, { 'Content-Type': 'application/json' });
+            return res.end(JSON.stringify({ success: false, message: 'Missing required fields in request body.' }));
         }
 
-        // 7. Данные для сохранения
-        const resultDocument = {
-            score: score,
-            correctAnswers: correctAnswers,
-            maxStreak: maxStreak,
+        const dbClient = await connectToDatabase();
+        // Убедитесь, что имя базы данных "Cluster0" верное!
+        const database = dbClient.db("Cluster0");
+        const collection = database.collection("QuizResults");
+
+        const resultToSave = {
+            userName: quizData.userName || 'Аноним', // <--- НОВОЕ ПОЛЕ
+            score: quizData.score,
+            correctAnswers: quizData.correctAnswers,
+            maxStreak: quizData.maxStreak,
             timestamp: new Date()
         };
 
-        // 8. Сохранение в базу
-        const result = await collection.insertOne(resultDocument);
+        const result = await collection.insertOne(resultToSave);
 
-        // 9. Успешный ответ
         res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ success: true, message: 'Result saved', id: result.insertedId }));
+        res.end(JSON.stringify({ success: true, insertedId: result.insertedId }));
 
     } catch (error) {
         console.error("Database error:", error);

@@ -138,7 +138,7 @@
                     </div>
                     <div class="text-center">
                         <div class="text-2xl font-bold text-purple-500" id="streak">0</div>
-                        <div class="text-sm text-gray-400">Подряд</div>
+                        <div class="text-sm text-gray-400">Серия</div>
                     </div>
                 </div>
                 <div class="text-right">
@@ -184,7 +184,7 @@
                 </div>
                 <div class="text-center">
                     <div class="text-4xl font-bold text-purple-500 mb-2" id="maxStreak">0</div>
-                    <div class="text-gray-400">Максимум подряд</div>
+                    <div class="text-gray-400">Макс. серия</div>
                 </div>
             </div>
 
@@ -194,9 +194,10 @@
                     <thead>
                         <tr>
                             <th class="py-2 border-b-2 border-gray-600">Место</th>
+                            <th class="py-2 border-b-2 border-gray-600">Имя</th>
                             <th class="py-2 border-b-2 border-gray-600">Очки</th>
                             <th class="py-2 border-b-2 border-gray-600">Правильно</th>
-                            <th class="py-2 border-b-2 border-gray-600">Стрик</th>
+                            <th class="py-2 border-b-2 border-gray-600">Серия</th>
                         </tr>
                     </thead>
                     <tbody id="leaderboardBody">
@@ -225,6 +226,8 @@
         let correctAnswers = 0;
         let currentQuestion = null;
         let answered = false;
+        // НОВОЕ: Переменная для хранения имени пользователя
+        let userName = 'Аноним';
 
         const TOTAL_QUESTIONS = 10;
 
@@ -336,6 +339,14 @@
 
         // Начало викторины
         function startQuiz() {
+            // НОВОЕ: Запрос имени
+            if (userName === 'Аноним') {
+                const tempName = prompt("Пожалуйста, введите ваше имя для таблицы лидеров (необязательно):");
+                if (tempName && tempName.trim().length > 0) {
+                    userName = tempName.trim();
+                }
+            }
+
             console.log('Начало викторины, элементов:', elements.length);
             currentQuestionIndex = 0;
             score = 0;
@@ -346,7 +357,7 @@
             updateStats();
         }
 
-        // Генерация вопроса
+        // Генерация вопроса (остальной код не менялся)
         function generateQuestion() {
             if (currentQuestionIndex >= TOTAL_QUESTIONS) {
                 showResults();
@@ -407,7 +418,7 @@
             renderQuestion();
         }
 
-        // Генерация неправильных ответов
+        // Генерация неправильных ответов (остальной код не менялся)
         function generateWrongAnswers(correctElement, questionType, correctAnswer) {
             const wrongAnswers = [];
             const otherElements = elements.filter(el => el.symbol !== correctElement.symbol);
@@ -460,7 +471,7 @@
             return wrongAnswers;
         }
 
-        // Отображение вопроса
+        // Отображение вопроса (остальной код не менялся)
         function renderQuestion() {
             document.getElementById('questionText').textContent = currentQuestion.questionText;
             document.getElementById('questionElement').textContent = currentQuestion.questionElement;
@@ -480,7 +491,7 @@
             document.getElementById('nextButton').classList.add('hidden');
         }
 
-        // Выбор ответа
+        // Выбор ответа (остальной код не менялся)
         function selectAnswer(selectedAnswer, index) {
             if (answered) return;
 
@@ -523,7 +534,7 @@
             document.getElementById('nextButton').classList.remove('hidden');
         }
 
-        // Следующий вопрос
+        // Следующий вопрос (остальной код не менялся)
         function nextQuestion() {
             currentQuestionIndex++;
             generateQuestion();
@@ -536,7 +547,7 @@
             questionCard.classList.add('question-enter');
         }
 
-        // Обновление статистики
+        // Обновление статистики (остальной код не менялся)
         function updateStats() {
             document.getElementById('currentQuestion').textContent = Math.min(currentQuestionIndex + 1, TOTAL_QUESTIONS);
             document.getElementById('score').textContent = score;
@@ -569,6 +580,7 @@
                         html += `
                             <tr class="hover:bg-gray-700/50">
                                 <td class="py-2 text-lg font-bold">${index + 1}</td>
+                                <td class="py-2">${result.userName || 'Аноним'}</td>
                                 <td class="py-2 text-green-400 font-semibold">${result.score}</td>
                                 <td class="py-2">${result.correctAnswers}</td>
                                 <td class="py-2">${result.maxStreak}</td>
@@ -578,7 +590,7 @@
                     tableBody.innerHTML = html;
                     table.classList.remove('hidden');
                 } else {
-                    tableBody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-gray-400">Нет сохраненных результатов.</td></tr>';
+                    tableBody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-gray-400">Нет сохраненных результатов.</td></tr>';
                     table.classList.remove('hidden');
                 }
             } catch (error) {
@@ -615,6 +627,7 @@
 
             // 2. Сбор данных для API
             const quizData = {
+                userName: userName, // НОВОЕ ПОЛЕ
                 score: score,
                 correctAnswers: correctAnswers,
                 maxStreak: maxStreak
@@ -686,6 +699,9 @@
         }
         // Перезапуск викторины
         function restartQuiz() {
+            // Сбрасываем имя, чтобы запросить его снова
+            userName = 'Аноним';
+
             document.getElementById('resultsCard').classList.add('hidden');
             document.getElementById('leaderboardCard').classList.add('hidden'); // Скрываем таблицу лидеров при перезапуске
             document.getElementById('questionCard').classList.remove('hidden');
@@ -696,7 +712,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             loadElements();
         });
-        
+
         // Немедленная инициализация если DOM уже загружен
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', function() {

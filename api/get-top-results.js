@@ -5,11 +5,13 @@ const { MongoClient } = require('mongodb');
 const uri = process.env.MONGO_URI;
 let client = null;
 
+// ... (Остальной код и CORS_HEADERS остаются без изменений)
 const CORS_HEADERS = {
     'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, OPTIONS', // Разрешаем GET
+    'Access-Control-Allow-Methods': 'GET, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type'
 };
+// ...
 
 async function connectToDatabase() {
     if (!client) {
@@ -38,12 +40,9 @@ export default async (req, res) => {
 
     try {
         const dbClient = await connectToDatabase();
-        // Используем то же имя базы данных, которое работает
         const database = dbClient.db("Cluster0");
         const collection = database.collection("QuizResults");
 
-        // 1. Сортируем по очкам (score) по убыванию ( -1 )
-        // 2. Ограничиваем до 10 лучших результатов (limit(10))
         const topResults = await collection.find({})
             .sort({ score: -1, timestamp: -1 }) // Сортируем по очкам, затем по времени
             .limit(10)

@@ -9,85 +9,93 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
+        /* ИСПРАВЛЕНО: Обновленные переменные с новой палитрой */
         :root {
             --primary-bg: #1a1a2e;
             --secondary-bg: #16213e;
-            --accent-blue: #00d4ff;
-            --accent-green: #4ecdc4;
-            --accent-orange: #ff6b35;
+            --accent-blue: #2196F3; /* Синий (Архитектура) */
+            --accent-green: #4CAF50; /* Зелёный (Анализ) */
+            --accent-orange: #FF9800; /* Оранжевый (GUI) */
+            --accent-purple: #9C27B0; /* Фиолетовый (Тестирование/Акцент) */
             --text-primary: #ffffff;
             --text-secondary: #e0e0e0;
         }
-        
+
         body {
             font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
             min-height: 100vh;
         }
-        
+
         .quiz-card {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
+
         .answer-option {
             background: rgba(255, 255, 255, 0.05);
             border: 2px solid rgba(255, 255, 255, 0.1);
             transition: all 0.3s ease;
             cursor: pointer;
         }
-        
+
         .answer-option:hover {
             background: rgba(255, 255, 255, 0.1);
+            /* ИСПРАВЛЕНО: Новый синий */
             border-color: var(--accent-blue);
             transform: translateX(5px);
         }
-        
+
         .answer-option.correct {
-            background: rgba(46, 204, 113, 0.2);
-            border-color: #2ecc71;
+            /* ИСПРАВЛЕНО: Новый зеленый (#4CAF50) */
+            background: rgba(76, 175, 80, 0.2);
+            border-color: #4CAF50;
         }
-        
+
         .answer-option.incorrect {
-            background: rgba(231, 76, 60, 0.2);
-            border-color: #e74c3c;
+            /* Оставляем красный для ошибки, но используем более мягкий оттенок */
+            background: rgba(239, 83, 80, 0.2);
+            border-color: #ef5350;
         }
-        
+
         .answer-option.selected {
-            background: rgba(0, 212, 255, 0.2);
-            border-color: var(--accent-blue);
+            /* ИСПРАВЛЕНО: Новый фиолетовый (#9C27B0) для выбранного ответа */
+            background: rgba(156, 39, 176, 0.2);
+            border-color: var(--accent-purple);
         }
-        
+
         .progress-bar {
             background: rgba(255, 255, 255, 0.1);
             overflow: hidden;
         }
-        
+
         .progress-fill {
+            /* ИСПРАВЛЕНО: Градиент из нового синего в новый зеленый */
             background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
             transition: width 0.5s ease;
         }
-        
+
         .element-symbol {
             font-family: 'JetBrains Mono', monospace;
+            /* ИСПРАВЛЕНО: Новый синий */
             color: var(--accent-blue);
         }
-        
+
         .score-animation {
             animation: scoreUp 0.6s ease-out;
         }
-        
+
         @keyframes scoreUp {
             0% { transform: scale(1); }
             50% { transform: scale(1.2); }
             100% { transform: scale(1); }
         }
-        
+
         .question-enter {
             animation: slideIn 0.5s ease-out;
         }
-        
+
         @keyframes slideIn {
             from { opacity: 0; transform: translateX(50px); }
             to { opacity: 1; transform: translateX(0); }
@@ -95,14 +103,13 @@
     </style>
 </head>
 <body class="text-white">
-    <!-- Навигация -->
     <nav class="p-6">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 bg-gradient-to-r from-blue-400 to-green-400 rounded-lg flex items-center justify-center">
+                <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-green-600 rounded-lg flex items-center justify-center">
                     <span class="text-white font-bold text-lg">H</span>
                 </div>
-                <span class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-green-400">HIMIK</span>
+                <span class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-green-600">HIMIK</span>
             </div>
             <div class="hidden md:flex space-x-6">
                 <a href="index.html" class="text-gray-300 hover:text-white transition-colors">Главная</a>
@@ -112,28 +119,25 @@
         </div>
     </nav>
 
-    <!-- Основной контент -->
     <main class="max-w-4xl mx-auto px-6 py-8">
-        <!-- Заголовок -->
         <div class="text-center mb-8">
-            <h1 class="text-5xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-green-400">Химическая викторина</h1>
+            <h1 class="text-5xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-green-600">Химическая викторина</h1>
             <p class="text-xl text-gray-300">Проверьте свои знания химических элементов</p>
         </div>
 
-        <!-- Статистика -->
         <div class="quiz-card rounded-2xl p-6 mb-8">
             <div class="flex justify-between items-center mb-4">
                 <div class="flex items-center space-x-6">
                     <div class="text-center">
-                        <div class="text-2xl font-bold text-blue-400" id="currentQuestion">1</div>
+                        <div class="text-2xl font-bold text-blue-500" id="currentQuestion">1</div>
                         <div class="text-sm text-gray-400">Вопрос</div>
                     </div>
                     <div class="text-center">
-                        <div class="text-2xl font-bold text-green-400" id="score">0</div>
+                        <div class="text-2xl font-bold text-green-600" id="score">0</div>
                         <div class="text-sm text-gray-400">Очки</div>
                     </div>
                     <div class="text-center">
-                        <div class="text-2xl font-bold text-orange-400" id="streak">0</div>
+                        <div class="text-2xl font-bold text-purple-500" id="streak">0</div>
                         <div class="text-sm text-gray-400">Подряд</div>
                     </div>
                 </div>
@@ -146,52 +150,49 @@
             </div>
         </div>
 
-        <!-- Карточка вопроса -->
         <div id="questionCard" class="quiz-card rounded-2xl p-8 mb-6 question-enter">
             <div class="text-center mb-8">
                 <h2 id="questionText" class="text-2xl font-semibold mb-4">Загрузка вопроса...</h2>
                 <div id="questionElement" class="element-symbol text-6xl font-bold mb-4"></div>
             </div>
-            
+
             <div id="answerOptions" class="space-y-4">
-                <!-- Варианты ответов будут сгенерированы JavaScript -->
-            </div>
-            
+                </div>
+
             <div class="mt-8 text-center">
-                <button id="nextButton" onclick="nextQuestion()" class="hidden px-8 py-3 bg-gradient-to-r from-blue-500 to-green-500 rounded-lg font-semibold hover:from-blue-600 hover:to-green-600 transition-all">
+                <button id="nextButton" onclick="nextQuestion()" class="hidden px-8 py-3 bg-gradient-to-r from-blue-600 to-green-600 rounded-lg font-semibold hover:from-blue-700 hover:to-green-700 transition-all">
                     Следующий вопрос
                 </button>
             </div>
         </div>
 
-        <!-- Результаты -->
         <div id="resultsCard" class="quiz-card rounded-2xl p-8 text-center hidden">
             <div class="mb-8">
                 <div class="text-6xl mb-4">🎉</div>
                 <h2 class="text-3xl font-bold mb-4">Викторина завершена!</h2>
                 <p class="text-xl text-gray-300 mb-6">Ваши результаты:</p>
             </div>
-            
+
             <div class="grid md:grid-cols-3 gap-6 mb-8">
                 <div class="text-center">
-                    <div class="text-4xl font-bold text-blue-400 mb-2" id="finalScore">0</div>
+                    <div class="text-4xl font-bold text-blue-500 mb-2" id="finalScore">0</div>
                     <div class="text-gray-400">Общие очки</div>
                 </div>
                 <div class="text-center">
-                    <div class="text-4xl font-bold text-green-400 mb-2" id="correctAnswers">0</div>
+                    <div class="text-4xl font-bold text-green-600 mb-2" id="correctAnswers">0</div>
                     <div class="text-gray-400">Правильных ответов</div>
                 </div>
                 <div class="text-center">
-                    <div class="text-4xl font-bold text-orange-400 mb-2" id="maxStreak">0</div>
+                    <div class="text-4xl font-bold text-purple-500 mb-2" id="maxStreak">0</div>
                     <div class="text-gray-400">Максимум подряд</div>
                 </div>
             </div>
-            
+
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <button onclick="restartQuiz()" class="px-8 py-3 bg-gradient-to-r from-blue-500 to-green-500 rounded-lg font-semibold hover:from-blue-600 hover:to-green-600 transition-all">
+                <button onclick="restartQuiz()" class="px-8 py-3 bg-gradient-to-r from-blue-600 to-green-600 rounded-lg font-semibold hover:from-blue-700 hover:to-green-700 transition-all">
                     Попробовать снова
                 </button>
-                <button onclick="window.location.href='study.html'" class="px-8 py-3 border-2 border-blue-400 text-blue-400 rounded-lg font-semibold hover:bg-blue-400 hover:text-white transition-all">
+                <button onclick="window.location.href='study.html'" class="px-8 py-3 border-2 border-blue-500 text-blue-500 rounded-lg font-semibold hover:bg-blue-500 hover:text-white transition-all">
                     Перейти к обучению
                 </button>
             </div>
@@ -213,7 +214,7 @@
         // Типы вопросов
         const QUESTION_TYPES = [
             'symbol_to_name',
-            'name_to_symbol', 
+            'name_to_symbol',
             'symbol_to_mass',
             'name_to_mass',
             'electron_config'
@@ -233,14 +234,14 @@
                 startQuiz();
             } catch (error) {
                 console.error('Ошибка загрузки данных:', error);
-                // Временные данные для демонстрации
+                // Временные данные для демонстрации (атомные массы округлены до целого)
                 elements = [
                     {
                         "atomic_number": 1,
                         "symbol": "H",
                         "name_ru": "Водород",
                         "name_en": "Hydrogen",
-                        "mass": 1.008,
+                        "mass": 1,
                         "category": "nonmetal",
                         "period": 1,
                         "group": 1,
@@ -252,7 +253,7 @@
                         "symbol": "C",
                         "name_ru": "Углерод",
                         "name_en": "Carbon",
-                        "mass": 12.011,
+                        "mass": 12,
                         "category": "nonmetal",
                         "period": 2,
                         "group": 14,
@@ -264,7 +265,7 @@
                         "symbol": "O",
                         "name_ru": "Кислород",
                         "name_en": "Oxygen",
-                        "mass": 15.999,
+                        "mass": 16,
                         "category": "nonmetal",
                         "period": 2,
                         "group": 16,
@@ -276,7 +277,7 @@
                         "symbol": "Na",
                         "name_ru": "Натрий",
                         "name_en": "Sodium",
-                        "mass": 22.990,
+                        "mass": 23,
                         "category": "alkali_metal",
                         "period": 3,
                         "group": 1,
@@ -288,7 +289,7 @@
                         "symbol": "Fe",
                         "name_ru": "Железо",
                         "name_en": "Iron",
-                        "mass": 55.845,
+                        "mass": 56,
                         "category": "transition_metal",
                         "period": 4,
                         "group": 8,
@@ -300,7 +301,7 @@
                         "symbol": "Au",
                         "name_ru": "Золото",
                         "name_en": "Gold",
-                        "mass": 196.967,
+                        "mass": 197,
                         "category": "transition_metal",
                         "period": 6,
                         "group": 11,
@@ -334,7 +335,7 @@
             answered = false;
             const questionType = QUESTION_TYPES[Math.floor(Math.random() * QUESTION_TYPES.length)];
             const correctElement = elements[Math.floor(Math.random() * elements.length)];
-            
+
             let questionText = '';
             let correctAnswer = '';
             let questionElement = '';
@@ -352,11 +353,13 @@
                     break;
                 case 'symbol_to_mass':
                     questionText = `Какая атомная масса у элемента ${correctElement.symbol}?`;
+                    // МАССА ТЕПЕРЬ ЦЕЛОЕ ЧИСЛО
                     correctAnswer = correctElement.mass.toString();
                     questionElement = correctElement.symbol;
                     break;
                 case 'name_to_mass':
                     questionText = `Какая атомная масса у элемента ${correctElement.name_ru}?`;
+                    // МАССА ТЕПЕРЬ ЦЕЛОЕ ЧИСЛО
                     correctAnswer = correctElement.mass.toString();
                     questionElement = correctElement.name_ru;
                     break;
@@ -392,25 +395,43 @@
                 case 'symbol_to_name':
                 case 'name_to_symbol':
                     // Выбираем случайные названия/символы других элементов
-                    for (let i = 0; i < 3 && i < otherElements.length; i++) {
-                        const randomElement = otherElements[Math.floor(Math.random() * otherElements.length)];
-                        wrongAnswers.push(questionType === 'symbol_to_name' ? randomElement.name_ru : randomElement.symbol);
+                    // Пропускаем элементы, если их недостаточно
+                    const otherNamesOrSymbols = otherElements.map(el => questionType === 'symbol_to_name' ? el.name_ru : el.symbol);
+                    while (wrongAnswers.length < 3 && otherNamesOrSymbols.length > 0) {
+                        const randomIndex = Math.floor(Math.random() * otherNamesOrSymbols.length);
+                        const potentialAnswer = otherNamesOrSymbols.splice(randomIndex, 1)[0];
+                        if (potentialAnswer !== correctAnswer) {
+                            wrongAnswers.push(potentialAnswer);
+                        }
                     }
                     break;
                 case 'symbol_to_mass':
                 case 'name_to_mass':
-                    // Генерируем близкие по массе значения
+                    // ИСПРАВЛЕНО: Генерируем близкие ЦЕЛЫЕ значения
                     const baseMass = correctElement.mass;
-                    for (let i = 0; i < 3; i++) {
-                        const variation = (Math.random() - 0.5) * 20; // ±10 единиц
-                        wrongAnswers.push((baseMass + variation).toFixed(3));
+                    const usedMasses = [baseMass];
+
+                    while (wrongAnswers.length < 3) {
+                        // Целая вариация ±[1, 5]
+                        let variation = (Math.random() > 0.5 ? 1 : -1) * (Math.floor(Math.random() * 5) + 1);
+                        let wrongMass = baseMass + variation;
+
+                        // Проверка на уникальность и положительное значение
+                        if (wrongMass > 0 && !usedMasses.includes(wrongMass)) {
+                            wrongAnswers.push(wrongMass.toString());
+                            usedMasses.push(wrongMass);
+                        }
                     }
                     break;
                 case 'electron_config':
                     // Используем конфигурации других элементов
-                    for (let i = 0; i < 3 && i < otherElements.length; i++) {
-                        const randomElement = otherElements[Math.floor(Math.random() * otherElements.length)];
-                        wrongAnswers.push(randomElement.electron_configuration);
+                    const otherConfigs = otherElements.map(el => el.electron_configuration);
+                    while (wrongAnswers.length < 3 && otherConfigs.length > 0) {
+                        const randomIndex = Math.floor(Math.random() * otherConfigs.length);
+                        const potentialAnswer = otherConfigs.splice(randomIndex, 1)[0];
+                        if (potentialAnswer !== correctAnswer) {
+                            wrongAnswers.push(potentialAnswer);
+                        }
                     }
                     break;
             }
@@ -422,7 +443,7 @@
         function renderQuestion() {
             document.getElementById('questionText').textContent = currentQuestion.questionText;
             document.getElementById('questionElement').textContent = currentQuestion.questionElement;
-            
+
             const optionsContainer = document.getElementById('answerOptions');
             optionsContainer.innerHTML = currentQuestion.answers.map((answer, index) => `
                 <div class="answer-option rounded-lg p-4" onclick="selectAnswer('${answer}', ${index})">
@@ -441,10 +462,10 @@
         // Выбор ответа
         function selectAnswer(selectedAnswer, index) {
             if (answered) return;
-            
+
             answered = true;
             const options = document.querySelectorAll('.answer-option');
-            
+
             // Подсветка правильного и неправильного ответов
             options.forEach((option, i) => {
                 const answer = currentQuestion.answers[i];
@@ -453,7 +474,8 @@
                 } else if (answer === selectedAnswer && answer !== currentQuestion.correctAnswer) {
                     option.classList.add('incorrect');
                 }
-                
+
+                // ИСПРАВЛЕНО: Теперь выбранный ответ подсвечивается фиолетовым
                 if (answer === selectedAnswer) {
                     option.classList.add('selected');
                 }
@@ -461,13 +483,13 @@
 
             // Проверка ответа
             const isCorrect = selectedAnswer === currentQuestion.correctAnswer;
-            
+
             if (isCorrect) {
                 score += 10 + streak;
                 correctAnswers++;
                 streak++;
                 maxStreak = Math.max(maxStreak, streak);
-                
+
                 // Анимация увеличения счета
                 const scoreElement = document.getElementById('score');
                 scoreElement.classList.add('score-animation');
@@ -485,7 +507,7 @@
             currentQuestionIndex++;
             generateQuestion();
             updateStats();
-            
+
             // Анимация перехода
             const questionCard = document.getElementById('questionCard');
             questionCard.classList.remove('question-enter');
@@ -498,7 +520,7 @@
             document.getElementById('currentQuestion').textContent = Math.min(currentQuestionIndex + 1, TOTAL_QUESTIONS);
             document.getElementById('score').textContent = score;
             document.getElementById('streak').textContent = streak;
-            
+
             const progress = ((currentQuestionIndex) / TOTAL_QUESTIONS) * 100;
             document.getElementById('progressBar').style.width = progress + '%';
         }
@@ -507,15 +529,15 @@
         function showResults() {
             document.getElementById('questionCard').classList.add('hidden');
             document.getElementById('resultsCard').classList.remove('hidden');
-            
+
             document.getElementById('finalScore').textContent = score;
             document.getElementById('correctAnswers').textContent = correctAnswers;
             document.getElementById('maxStreak').textContent = maxStreak;
-            
+
             // Вычисление процента правильных ответов
             const percentage = Math.round((correctAnswers / TOTAL_QUESTIONS) * 100);
             let message = '';
-            
+
             if (percentage >= 90) {
                 message = 'Отличный результат! Вы настоящий химик! 🧪';
             } else if (percentage >= 70) {
@@ -525,11 +547,12 @@
             } else {
                 message = 'Нужно больше практики! Не сдавайтесь! 💪';
             }
-            
+
             const resultsCard = document.getElementById('resultsCard');
             const messageElement = document.createElement('p');
             messageElement.className = 'text-lg text-gray-300 mb-6';
             messageElement.textContent = message;
+            // Используем children[2] как точку вставки (после заголовка и подзаголовка)
             resultsCard.insertBefore(messageElement, resultsCard.children[2]);
         }
 

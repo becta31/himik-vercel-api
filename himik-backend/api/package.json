@@ -1,0 +1,11 @@
+{
+  "name": "himik-backend-vercel",
+  "version": "1.0.0",
+  "description": "API for HIMIK quiz results",
+  "scripts": {
+    "start": "echo 'This is a Vercel function project. No explicit start script needed.'"
+  },
+  "dependencies": {
+    "mongodb": "^6.3.0"
+  }
+}

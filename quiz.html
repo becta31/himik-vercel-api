@@ -225,6 +225,10 @@
         </div>
     </div>
     <script>
+        // 1. ОПРЕДЕЛЕНИЕ РЕЖИМА И ПАРАМЕТРОВ
+        const urlParams = new URLSearchParams(window.location.search);
+        const isLeaderboardMode = urlParams.get('show') === 'leaderboard';
+
         let elements = [];
         let currentQuestionIndex = 0;
         let score = 0;
@@ -260,7 +264,16 @@
                 }
                 elements = await response.json();
                 console.log('Элементы загружены:', elements.length);
-                startQuiz();
+
+                // 3. НОВОЕ УСЛОВИЕ: если режим рейтинга, открываем модал, иначе запускаем викторину
+                if (isLeaderboardMode) {
+                    document.getElementById('questionCard').classList.add('hidden');
+                    document.getElementById('resultsCard').classList.add('hidden');
+                    openLeaderboardModal();
+                } else {
+                    startQuiz();
+                }
+
             } catch (error) {
                 console.error('Ошибка загрузки данных:', error);
                 // Временные данные для демонстрации
@@ -272,14 +285,22 @@
                     {"atomic_number": 26, "symbol": "Fe", "name_ru": "Железо", "mass": 56, "electron_configuration": "[Ar] 3d⁶ 4s²"},
                     {"atomic_number": 79, "symbol": "Au", "name_ru": "Золото", "mass": 197, "electron_configuration": "[Xe] 4f¹⁴ 5d¹⁰ 6s¹"}
                 ];
-                startQuiz();
+
+                // Если режим рейтинга, открываем модал, даже если данные временные
+                if (isLeaderboardMode) {
+                    document.getElementById('questionCard').classList.add('hidden');
+                    document.getElementById('resultsCard').classList.add('hidden');
+                    openLeaderboardModal();
+                } else {
+                    startQuiz();
+                }
             }
         }
 
         // Начало викторины
         function startQuiz() {
-            // Запрос имени
-            if (userName === 'Аноним') {
+            // 2. ИСПРАВЛЕНИЕ: Запрос имени ТОЛЬКО если мы НЕ в режиме просмотра рейтинга
+            if (!isLeaderboardMode && (userName === 'Аноним' || !userName)) {
                 const tempName = prompt("Пожалуйста, введите ваше имя для таблицы лидеров (необязательно):");
                 if (tempName && tempName.trim().length > 0) {
                     userName = tempName.trim();
@@ -302,7 +323,6 @@
                 showResults();
                 return;
             }
-            // ... (весь код функции generateQuestion)
             answered = false;
             const questionType = QUESTION_TYPES[Math.floor(Math.random() * QUESTION_TYPES.length)];
             const correctElement = elements[Math.floor(Math.random() * elements.length)];
@@ -552,7 +572,6 @@
 
             document.getElementById('questionCard').classList.add('hidden');
             document.getElementById('resultsCard').classList.remove('hidden');
-            // document.getElementById('leaderboardCard').classList.remove('hidden'); <-- УДАЛЕНО
 
             // 1. Отображение результатов на странице
             document.getElementById('finalScore').textContent = score;
@@ -588,11 +607,9 @@
             })
             .then(data => {
                 console.log('✅ Результат викторины успешно сохранен:', data);
-                // loadLeaderboard(); // УДАЛЕНО: загрузка теперь по клику
             })
             .catch(error => {
                 console.error('❌ Ошибка при отправке результата:', error);
-                // loadLeaderboard(); // УДАЛЕНО: загрузка теперь по клику
             });
 
             console.log('--- END: Fetch request sent (or failed to send). ---');
@@ -636,20 +653,16 @@
 
         // Инициализация
         document.addEventListener('DOMContentLoaded', function() {
-    loadElements();
-    checkUrlParameters(); // <-- НОВЫЙ ВЫЗОВ
-});
+            loadElements();
+        });
 
-// Немедленная инициализация если DOM уже загружен
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() {
-        loadElements();
-        checkUrlParameters(); // <-- НОВЫЙ ВЫЗОВ
-    });
-} else {
-    loadElements();
-    checkUrlParameters(); // <-- НОВЫЙ ВЫЗОВ
-}
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                loadElements();
+            });
+        } else {
+            loadElements();
+        }
     </script>
 <script>
     document.addEventListener('keydown', e => {

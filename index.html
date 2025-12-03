@@ -6,7 +6,7 @@
     <title>HIMIK - Тренажер по химии</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.birds.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.net.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -20,14 +20,14 @@
             --text-primary: #ffffff;
             --text-secondary: #e0e0e0;
         }
-        
+
         body {
             font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
             min-height: 100vh;
             overflow-x: hidden;
         }
-        
+
         .hero-title {
             font-family: 'Playfair Display', serif;
             background: linear-gradient(45deg, var(--accent-blue), var(--accent-green));
@@ -35,7 +35,7 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-        
+
         .molecular-bg {
             position: absolute;
             top: 0;
@@ -45,47 +45,47 @@
             opacity: 0.1;
             z-index: -1;
         }
-        
+
         .card-hover {
             transition: all 0.3s ease;
             backdrop-filter: blur(10px);
             background: rgba(255, 255, 255, 0.05);
         }
-        
+
         .card-hover:hover {
             transform: translateY(-10px);
             box-shadow: 0 20px 40px rgba(0, 212, 255, 0.2);
             background: rgba(255, 255, 255, 0.1);
         }
-        
+
         .btn-primary {
             background: linear-gradient(45deg, var(--accent-blue), var(--accent-green));
             transition: all 0.3s ease;
         }
-        
+
         .btn-primary:hover {
             transform: scale(1.05);
             box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
         }
-        
+
         .element-symbol {
             font-family: 'JetBrains Mono', monospace;
             color: var(--accent-blue);
         }
-        
+
         .floating-element {
             animation: float 6s ease-in-out infinite;
         }
-        
+
         @keyframes float {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-20px); }
         }
-        
+
         .pulse-glow {
             animation: pulse-glow 2s ease-in-out infinite alternate;
         }
-        
+
         @keyframes pulse-glow {
             from { box-shadow: 0 0 20px rgba(0, 212, 255, 0.3); }
             to { box-shadow: 0 0 40px rgba(0, 212, 255, 0.6); }
@@ -93,10 +93,8 @@
     </style>
 </head>
 <body class="text-white">
-    <!-- Фон с молекулярной структурой -->
     <div id="molecular-bg" class="molecular-bg"></div>
-    
-    <!-- Навигация -->
+
     <nav class="relative z-10 p-6">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-3">
@@ -106,15 +104,14 @@
                 <span class="text-2xl font-bold hero-title">HIMIK</span>
             </div>
             <div class="hidden md:flex space-x-6">
-    <a href="index.html" class="text-gray-300 hover:text-white transition-colors">Главная</a>
-    <a href="study.html" class="text-gray-300 hover:text-white transition-colors">Обучение</a>
-    <a href="quiz.html" class="text-gray-300 hover:text-white transition-colors">Викторина</a>
-    <a href="quiz.html?show=leaderboard" class="text-gray-300 hover:text-white transition-colors">Рейтинг</a>
-</div>
+                <a href="index.html" class="text-gray-300 hover:text-white transition-colors">Главная</a>
+                <a href="study.html" class="text-gray-300 hover:text-white transition-colors">Обучение</a>
+                <a href="quiz.html" class="text-gray-300 hover:text-white transition-colors">Викторина</a>
+                <a href="quiz.html?show=leaderboard" class="text-gray-300 hover:text-white transition-colors">Рейтинг</a>
+            </div>
         </div>
     </nav>
 
-    <!-- Главный героический блок -->
     <section class="relative z-10 pt-20 pb-32">
         <div class="max-w-7xl mx-auto px-6">
             <div class="text-center mb-20">
@@ -134,7 +131,6 @@
                 </div>
             </div>
 
-            <!-- Особенности приложения -->
             <div class="grid md:grid-cols-3 gap-8 mb-20">
                 <div class="card-hover rounded-2xl p-8 text-center">
                     <div class="w-16 h-16 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full mx-auto mb-6 flex items-center justify-center">
@@ -143,7 +139,7 @@
                     <h3 class="text-2xl font-semibold mb-4">Режим обучения</h3>
                     <p class="text-gray-400">Изучайте химические элементы через интерактивные карточки с подробной информацией</p>
                 </div>
-                
+
                 <div class="card-hover rounded-2xl p-8 text-center">
                     <div class="w-16 h-16 bg-gradient-to-r from-green-400 to-blue-500 rounded-full mx-auto mb-6 flex items-center justify-center">
                         <span class="text-2xl">🎯</span>
@@ -151,7 +147,7 @@
                     <h3 class="text-2xl font-semibold mb-4">Викторина</h3>
                     <p class="text-gray-400">Проверьте свои знания в интерактивной викторине с различными типами вопросов</p>
                 </div>
-                
+
                 <div class="card-hover rounded-2xl p-8 text-center">
                     <div class="w-16 h-16 bg-gradient-to-r from-orange-400 to-red-500 rounded-full mx-auto mb-6 flex items-center justify-center">
                         <span class="text-2xl">📊</span>
@@ -161,7 +157,6 @@
                 </div>
             </div>
 
-            <!-- Примеры элементов -->
             <div class="text-center">
                 <h2 class="text-4xl font-bold mb-12">Популярные элементы</h2>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -190,7 +185,6 @@
         </div>
     </section>
 
-    <!-- Подвал -->
     <footer class="relative z-10 border-t border-gray-700 py-8">
         <div class="max-w-7xl mx-auto px-6 text-center">
             <p class="text-gray-400">&copy; 2025 HIMIK - Тренажер по химии. Современное образование для будущих ученых.</p>
@@ -199,7 +193,8 @@
 
     <script>
         // Инициализация фона с молекулами
-        VANTA.BIRDS({
+        // 2. ИЗМЕНЕНИЕ: VANTA.BIRDS заменен на VANTA.NET, и обновлены параметры
+        VANTA.NET({
             el: "#molecular-bg",
             mouseControls: true,
             touchControls: true,
@@ -209,15 +204,10 @@
             scale: 1.00,
             scaleMobile: 1.00,
             backgroundColor: 0x1a1a2e,
-            color1: 0x00d4ff,
-            color2: 0x4ecdc4,
-            birdSize: 1.5,
-            wingSpan: 25.00,
-            speedLimit: 3.00,
-            separation: 20.00,
-            alignment: 20.00,
-            cohesion: 20.00,
-            quantity: 3.00
+            color: 0x00d4ff,      // Цвет точек/линий
+            maxDistance: 25.00,   // Максимальное расстояние для соединения
+            spacing: 15.00,       // Расстояние между точками
+            points: 10.00         // Количество точек
         });
 
         // Плавная прокрутка

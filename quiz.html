@@ -188,27 +188,12 @@
                 </div>
             </div>
 
-            <div id="leaderboardCard" class="quiz-card rounded-2xl p-8 mt-6">
-                <h3 class="text-2xl font-bold mb-4 text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-green-600">🏆 Таблица лидеров (ТОП-10)</h3>
-                <table class="w-full text-left border-collapse" id="leaderboardTable">
-                    <thead>
-                        <tr>
-                            <th class="py-2 border-b-2 border-gray-600">Место</th>
-                            <th class="py-2 border-b-2 border-gray-600">Имя</th>
-                            <th class="py-2 border-b-2 border-gray-600">Очки</th>
-                            <th class="py-2 border-b-2 border-gray-600">Правильно</th>
-                            <th class="py-2 border-b-2 border-gray-600">Серия</th>
-                        </tr>
-                    </thead>
-                    <tbody id="leaderboardBody">
-                        </tbody>
-                </table>
-                <div id="leaderboardLoading" class="text-center text-gray-400 mt-4 hidden">Загрузка лучших результатов...</div>
-                <div id="leaderboardError" class="text-center text-red-400 mt-4 hidden">Не удалось загрузить таблицу лидеров.</div>
-            </div>
             <div class="flex flex-col sm:flex-row gap-4 justify-center mt-8">
                 <button onclick="restartQuiz()" class="px-8 py-3 bg-gradient-to-r from-blue-600 to-green-600 rounded-lg font-semibold hover:from-blue-700 hover:to-green-700 transition-all">
                     Попробовать снова
+                </button>
+                <button onclick="openLeaderboardModal()" class="px-8 py-3 border-2 border-purple-500 text-purple-500 rounded-lg font-semibold hover:bg-purple-500 hover:text-white transition-all">
+                    Показать рейтинг
                 </button>
                 <button onclick="window.location.href='study.html'" class="px-8 py-3 border-2 border-blue-500 text-blue-500 rounded-lg font-semibold hover:bg-blue-500 hover:text-white transition-all">
                     Перейти к обучению
@@ -217,6 +202,27 @@
         </div>
     </main>
 
+    <div id="leaderboardModal" class="fixed inset-0 bg-black bg-opacity-80 z-50 hidden flex items-center justify-center p-4">
+        <div id="leaderboardCard" class="quiz-card rounded-2xl p-8 w-full max-w-xl relative">
+            <button onclick="closeLeaderboardModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors text-3xl font-bold leading-none">&times;</button>
+            <h3 class="text-2xl font-bold mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-green-600">🏆 Таблица лидеров (ТОП-10)</h3>
+            <table class="w-full text-left border-collapse" id="leaderboardTable">
+                <thead>
+                    <tr>
+                        <th class="py-2 border-b-2 border-gray-600">Место</th>
+                        <th class="py-2 border-b-2 border-gray-600">Имя</th>
+                        <th class="py-2 border-b-2 border-gray-600">Очки</th>
+                        <th class="py-2 border-b-2 border-gray-600">Правильно</th>
+                        <th class="py-2 border-b-2 border-gray-600">Серия</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboardBody">
+                    </tbody>
+            </table>
+            <div id="leaderboardLoading" class="text-center text-gray-400 mt-4 hidden">Загрузка лучших результатов...</div>
+            <div id="leaderboardError" class="text-center text-red-400 mt-4 hidden">Не удалось загрузить таблицу лидеров.</div>
+        </div>
+    </div>
     <script>
         let elements = [];
         let currentQuestionIndex = 0;
@@ -226,7 +232,7 @@
         let correctAnswers = 0;
         let currentQuestion = null;
         let answered = false;
-        // НОВОЕ: Переменная для хранения имени пользователя
+        // Переменная для хранения имени пользователя
         let userName = 'Аноним';
 
         const TOTAL_QUESTIONS = 10;
@@ -240,9 +246,7 @@
             'electron_config'
         ];
 
-        // !!! НОВАЯ КОНСТАНТА: URL для получения результатов
         const TOP_RESULTS_API_URL = 'https://himik-vercel-api.vercel.app/api/get-top-results';
-        // !!! КОНЕЦ НОВОЙ КОНСТАНТЫ
 
         // Загрузка данных
         async function loadElements() {
@@ -258,80 +262,14 @@
                 startQuiz();
             } catch (error) {
                 console.error('Ошибка загрузки данных:', error);
-                // Временные данные для демонстрации (атомные массы округлены до целого)
+                // Временные данные для демонстрации
                 elements = [
-                    {
-                        "atomic_number": 1,
-                        "symbol": "H",
-                        "name_ru": "Водород",
-                        "name_en": "Hydrogen",
-                        "mass": 1,
-                        "category": "nonmetal",
-                        "period": 1,
-                        "group": 1,
-                        "electron_configuration": "1s¹",
-                        "description": "Самый легкий элемент"
-                    },
-                    {
-                        "atomic_number": 6,
-                        "symbol": "C",
-                        "name_ru": "Углерод",
-                        "name_en": "Carbon",
-                        "mass": 12,
-                        "category": "nonmetal",
-                        "period": 2,
-                        "group": 14,
-                        "electron_configuration": "[He] 2s² 2p²",
-                        "description": "Основа органической химии"
-                    },
-                    {
-                        "atomic_number": 8,
-                        "symbol": "O",
-                        "name_ru": "Кислород",
-                        "name_en": "Oxygen",
-                        "mass": 16,
-                        "category": "nonmetal",
-                        "period": 2,
-                        "group": 16,
-                        "electron_configuration": "[He] 2s² 2p⁴",
-                        "description": "Необходим для дыхания"
-                    },
-                    {
-                        "atomic_number": 11,
-                        "symbol": "Na",
-                        "name_ru": "Натрий",
-                        "name_en": "Sodium",
-                        "mass": 23,
-                        "category": "alkali_metal",
-                        "period": 3,
-                        "group": 1,
-                        "electron_configuration": "[Ne] 3s¹",
-                        "description": "Щелочной металл"
-                    },
-                    {
-                        "atomic_number": 26,
-                        "symbol": "Fe",
-                        "name_ru": "Железо",
-                        "name_en": "Iron",
-                        "mass": 56,
-                        "category": "transition_metal",
-                        "period": 4,
-                        "group": 8,
-                        "electron_configuration": "[Ar] 3d⁶ 4s²",
-                        "description": "Важный металл"
-                    },
-                    {
-                        "atomic_number": 79,
-                        "symbol": "Au",
-                        "name_ru": "Золото",
-                        "name_en": "Gold",
-                        "mass": 197,
-                        "category": "transition_metal",
-                        "period": 6,
-                        "group": 11,
-                        "electron_configuration": "[Xe] 4f¹⁴ 5d¹⁰ 6s¹",
-                        "description": "Драгоценный металл"
-                    }
+                    {"atomic_number": 1, "symbol": "H", "name_ru": "Водород", "mass": 1, "electron_configuration": "1s¹"},
+                    {"atomic_number": 6, "symbol": "C", "name_ru": "Углерод", "mass": 12, "electron_configuration": "[He] 2s² 2p²"},
+                    {"atomic_number": 8, "symbol": "O", "name_ru": "Кислород", "mass": 16, "electron_configuration": "[He] 2s² 2p⁴"},
+                    {"atomic_number": 11, "symbol": "Na", "name_ru": "Натрий", "mass": 23, "electron_configuration": "[Ne] 3s¹"},
+                    {"atomic_number": 26, "symbol": "Fe", "name_ru": "Железо", "mass": 56, "electron_configuration": "[Ar] 3d⁶ 4s²"},
+                    {"atomic_number": 79, "symbol": "Au", "name_ru": "Золото", "mass": 197, "electron_configuration": "[Xe] 4f¹⁴ 5d¹⁰ 6s¹"}
                 ];
                 startQuiz();
             }
@@ -339,7 +277,7 @@
 
         // Начало викторины
         function startQuiz() {
-            // НОВОЕ: Запрос имени
+            // Запрос имени
             if (userName === 'Аноним') {
                 const tempName = prompt("Пожалуйста, введите ваше имя для таблицы лидеров (необязательно):");
                 if (tempName && tempName.trim().length > 0) {
@@ -357,13 +295,13 @@
             updateStats();
         }
 
-        // Генерация вопроса (остальной код не менялся)
+        // Генерация вопроса (код без изменений)
         function generateQuestion() {
             if (currentQuestionIndex >= TOTAL_QUESTIONS) {
                 showResults();
                 return;
             }
-
+            // ... (весь код функции generateQuestion)
             answered = false;
             const questionType = QUESTION_TYPES[Math.floor(Math.random() * QUESTION_TYPES.length)];
             const correctElement = elements[Math.floor(Math.random() * elements.length)];
@@ -385,13 +323,11 @@
                     break;
                 case 'symbol_to_mass':
                     questionText = `Какая атомная масса у элемента ${correctElement.symbol}?`;
-                    // МАССА ТЕПЕРЬ ЦЕЛОЕ ЧИСЛО
                     correctAnswer = correctElement.mass.toString();
                     questionElement = correctElement.symbol;
                     break;
                 case 'name_to_mass':
                     questionText = `Какая атомная масса у элемента ${correctElement.name_ru}?`;
-                    // МАССА ТЕПЕРЬ ЦЕЛОЕ ЧИСЛО
                     correctAnswer = correctElement.mass.toString();
                     questionElement = correctElement.name_ru;
                     break;
@@ -402,7 +338,6 @@
                     break;
             }
 
-            // Генерация неправильных ответов
             const wrongAnswers = generateWrongAnswers(correctElement, questionType, correctAnswer);
             const allAnswers = [correctAnswer, ...wrongAnswers].sort(() => Math.random() - 0.5);
 
@@ -418,7 +353,7 @@
             renderQuestion();
         }
 
-        // Генерация неправильных ответов (остальной код не менялся)
+        // Генерация неправильных ответов (код без изменений)
         function generateWrongAnswers(correctElement, questionType, correctAnswer) {
             const wrongAnswers = [];
             const otherElements = elements.filter(el => el.symbol !== correctElement.symbol);
@@ -426,8 +361,6 @@
             switch (questionType) {
                 case 'symbol_to_name':
                 case 'name_to_symbol':
-                    // Выбираем случайные названия/символы других элементов
-                    // Пропускаем элементы, если их недостаточно
                     const otherNamesOrSymbols = otherElements.map(el => questionType === 'symbol_to_name' ? el.name_ru : el.symbol);
                     while (wrongAnswers.length < 3 && otherNamesOrSymbols.length > 0) {
                         const randomIndex = Math.floor(Math.random() * otherNamesOrSymbols.length);
@@ -439,16 +372,13 @@
                     break;
                 case 'symbol_to_mass':
                 case 'name_to_mass':
-                    // ИСПРАВЛЕНО: Генерируем близкие ЦЕЛЫЕ значения
                     const baseMass = correctElement.mass;
                     const usedMasses = [baseMass];
 
                     while (wrongAnswers.length < 3) {
-                        // Целая вариация ±[1, 5]
                         let variation = (Math.random() > 0.5 ? 1 : -1) * (Math.floor(Math.random() * 5) + 1);
                         let wrongMass = baseMass + variation;
 
-                        // Проверка на уникальность и положительное значение
                         if (wrongMass > 0 && !usedMasses.includes(wrongMass)) {
                             wrongAnswers.push(wrongMass.toString());
                             usedMasses.push(wrongMass);
@@ -456,7 +386,6 @@
                     }
                     break;
                 case 'electron_config':
-                    // Используем конфигурации других элементов
                     const otherConfigs = otherElements.map(el => el.electron_configuration);
                     while (wrongAnswers.length < 3 && otherConfigs.length > 0) {
                         const randomIndex = Math.floor(Math.random() * otherConfigs.length);
@@ -471,7 +400,7 @@
             return wrongAnswers;
         }
 
-        // Отображение вопроса (остальной код не менялся)
+        // Отображение вопроса (код без изменений)
         function renderQuestion() {
             document.getElementById('questionText').textContent = currentQuestion.questionText;
             document.getElementById('questionElement').textContent = currentQuestion.questionElement;
@@ -491,7 +420,7 @@
             document.getElementById('nextButton').classList.add('hidden');
         }
 
-        // Выбор ответа (остальной код не менялся)
+        // Выбор ответа (код без изменений)
         function selectAnswer(selectedAnswer, index) {
             if (answered) return;
 
@@ -507,7 +436,7 @@
                     option.classList.add('incorrect');
                 }
 
-                // ИСПРАВЛЕНО: Теперь выбранный ответ подсвечивается фиолетовым
+                // Теперь выбранный ответ подсвечивается фиолетовым
                 if (answer === selectedAnswer) {
                     option.classList.add('selected');
                 }
@@ -534,7 +463,7 @@
             document.getElementById('nextButton').classList.remove('hidden');
         }
 
-        // Следующий вопрос (остальной код не менялся)
+        // Следующий вопрос (код без изменений)
         function nextQuestion() {
             currentQuestionIndex++;
             generateQuestion();
@@ -547,7 +476,7 @@
             questionCard.classList.add('question-enter');
         }
 
-        // Обновление статистики (остальной код не менялся)
+        // Обновление статистики (код без изменений)
         function updateStats() {
             document.getElementById('currentQuestion').textContent = Math.min(currentQuestionIndex + 1, TOTAL_QUESTIONS);
             document.getElementById('score').textContent = score;
@@ -558,7 +487,20 @@
         }
 
 
-        // !!! НОВАЯ ФУНКЦИЯ: Загрузка и отображение таблицы лидеров
+        // НОВАЯ ФУНКЦИЯ: ОТКРЫТИЕ МОДАЛЬНОГО ОКНА
+        function openLeaderboardModal() {
+            document.getElementById('leaderboardModal').classList.remove('hidden');
+            // Загружаем данные только при открытии модального окна
+            loadLeaderboard();
+        }
+
+        // НОВАЯ ФУНКЦИЯ: ЗАКРЫТИЕ МОДАЛЬНОГО ОКНА
+        function closeLeaderboardModal() {
+            document.getElementById('leaderboardModal').classList.add('hidden');
+        }
+
+
+        // ФУНКЦИЯ: Загрузка и отображение таблицы лидеров
         async function loadLeaderboard() {
             const loading = document.getElementById('leaderboardLoading');
             const errorElement = document.getElementById('leaderboardError');
@@ -567,7 +509,7 @@
 
             loading.classList.remove('hidden');
             errorElement.classList.add('hidden');
-            table.classList.add('hidden');
+            table.classList.add('hidden'); // Скрываем таблицу во время загрузки
             tableBody.innerHTML = '';
 
             try {
@@ -601,17 +543,15 @@
                 loading.classList.add('hidden');
             }
         }
-        // !!! КОНЕЦ НОВОЙ ФУНКЦИИ loadLeaderboard
 
 
-        // НОВАЯ ФУНКЦИЯ showResults С ОТПРАВКОЙ ДАННЫХ
+        // ФУНКЦИЯ showResults С ОТПРАВКОЙ ДАННЫХ
         function showResults() {
-            // 🛑 ДИАГНОСТИЧЕСКОЕ СООБЩЕНИЕ
             console.log('--- START: showResults() function fired. ---');
 
             document.getElementById('questionCard').classList.add('hidden');
             document.getElementById('resultsCard').classList.remove('hidden');
-            document.getElementById('leaderboardCard').classList.remove('hidden'); // !!! ПОКАЗЫВАЕМ ТАБЛИЦУ ЛИДЕРОВ
+            // document.getElementById('leaderboardCard').classList.remove('hidden'); <-- УДАЛЕНО
 
             // 1. Отображение результатов на странице
             document.getElementById('finalScore').textContent = score;
@@ -622,18 +562,15 @@
             // 🚀 КОД ДЛЯ ОТПРАВКИ РЕЗУЛЬТАТА НА VERCEL API
             // ----------------------------------------------------------------
 
-            // !!! ВАЖНО: Убедитесь, что этот адрес совпадает с адресом вашего Vercel API
             const VERCEL_API_URL = 'https://himik-vercel-api.vercel.app/api/submit-result';
 
-            // 2. Сбор данных для API
             const quizData = {
-                userName: userName, // НОВОЕ ПОЛЕ
+                userName: userName,
                 score: score,
                 correctAnswers: correctAnswers,
                 maxStreak: maxStreak
             };
 
-            // 3. Асинхронная отправка данных на Vercel
             fetch(VERCEL_API_URL, {
                 method: 'POST',
                 headers: {
@@ -644,33 +581,22 @@
             .then(response => {
                 if (!response.ok) {
                     console.error(`Ошибка сервера: ${response.status}. Данные не сохранены.`);
-                    // Попытка прочитать тело ответа, даже если статус 4xx/5xx
                     return response.json().catch(() => ({ message: 'No JSON body or Network Error' }));
                 }
                 return response.json();
             })
             .then(data => {
-                // Если данные успешно сохранены, это сообщение появится в консоли F12
                 console.log('✅ Результат викторины успешно сохранен:', data);
-
-                // !!! ПОСЛЕ УСПЕШНОГО СОХРАНЕНИЯ: ОБНОВЛЯЕМ ТАБЛИЦУ
-                loadLeaderboard();
+                // loadLeaderboard(); // УДАЛЕНО: загрузка теперь по клику
             })
             .catch(error => {
                 console.error('❌ Ошибка при отправке результата:', error);
-
-                // !!! ЕСЛИ ПРОИЗОШЛА ОШИБКА СОХРАНЕНИЯ: ВСЕ РАВНО ПОКАЗЫВАЕМ ТАБЛИЦУ
-                loadLeaderboard();
+                // loadLeaderboard(); // УДАЛЕНО: загрузка теперь по клику
             });
 
-            // 🛑 ДИАГНОСТИЧЕСКОЕ СООБЩЕНИЕ
             console.log('--- END: Fetch request sent (or failed to send). ---');
 
-            // ----------------------------------------------------------------
-            // КОНЕЦ НОВОГО КОДА
-            // ----------------------------------------------------------------
-
-            // 4. Формирование сообщения о результате (Исходная логика)
+            // 4. Формирование сообщения о результате
             const percentage = Math.round((correctAnswers / TOTAL_QUESTIONS) * 100);
             let message = '';
 
@@ -689,21 +615,20 @@
             messageElement.className = 'text-lg text-gray-300 mb-6';
             messageElement.textContent = message;
 
-            // Используем children[2] как точку вставки
             const existingMessage = resultsCard.querySelector('.text-lg.text-gray-300.mb-6');
             if (existingMessage) {
                  existingMessage.remove();
             }
-            // Вставляем сообщение перед таблицей лидеров
-            resultsCard.insertBefore(messageElement, document.getElementById('leaderboardCard'));
+            resultsCard.insertBefore(messageElement, resultsCard.children[2]);
         }
+
         // Перезапуск викторины
         function restartQuiz() {
             // Сбрасываем имя, чтобы запросить его снова
             userName = 'Аноним';
 
             document.getElementById('resultsCard').classList.add('hidden');
-            document.getElementById('leaderboardCard').classList.add('hidden'); // Скрываем таблицу лидеров при перезапуске
+            document.getElementById('leaderboardModal').classList.add('hidden'); // Убеждаемся, что модал закрыт
             document.getElementById('questionCard').classList.remove('hidden');
             startQuiz();
         }

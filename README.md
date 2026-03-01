@@ -1,6 +1,10 @@
 🧪 ХИМИК — Интерактивный тренажер
 
-GitHub release (latest by date)GitHub last commitGitHub
+Вот код, который вы можете просто скопировать и вставить в самый верх вашего README.md (сразу после заголовка):
+
+GitHub last commitGitHub repo sizeGitHubWebsite
+
+
 
 Современный веб-тренажер для изучения периодической таблицы Менделеева.
 

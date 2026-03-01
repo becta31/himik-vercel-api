@@ -1,8 +1,42 @@
 🧪 ХИМИК — Интерактивный тренажер
 
-Вот код, который вы можете просто скопировать и вставить в самый верх вашего README.md (сразу после заголовка):
+Да, вы поняли суть, но выглядит так, будто вы скопировали просто текст или ссылки. Чтобы появились **картинки-бейджи**, код должен выглядеть именно так, как показано ниже.
 
-GitHub last commitGitHub repo sizeGitHubWebsite
+### ✅ Правильный код (скопируйте этот блок целиком):
+
+```markdown
+[![GitHub last commit](https://img.shields.io/github/last-commit/becta31/himik-vercel-api?style=flat-square)](https://github.com/becta31/himik-vercel-api/commits/main)
+[![GitHub repo size](https://img.shields.io/github/repo-size/becta31/himik-vercel-api?style=flat-square)](https://github.com/becta31/himik-vercel-api)
+[![Website](https://img.shields.io/website?up_message=online&up_color=green&down_message=offline&down_color=red&url=https%3A%2F%2Fhimik-vercel-api.vercel.app%2F&style=flat-square)](https://himik-vercel-api.vercel.app)
+```
+
+**Важно:**
+1.  Код начинается с `![` (или `[` если это ссылка).
+2.  Внутри квадратных скобок `[]` — текст, который появится, если картинка не загрузится.
+3.  Внутри круглых скобок `()` — адрес картинки (ссылка на shields.io).
+
+### 📌 Куда вставлять:
+
+Откройте ваш `README.md` и вставьте этот код **в самое начало**, перед заголовком.
+
+Пример:
+
+```markdown
+[![GitHub last commit](https://img.shields.io/github/last-commit/becta31/himik-vercel-api?style=flat-square)](https://github.com/becta31/himik-vercel-api/commits/main)
+[![GitHub repo size](https://img.shields.io/github/repo-size/becta31/himik-vercel-api?style=flat-square)](https://github.com/becta31/himik-vercel-api)
+[![Website](https://img.shields.io/website?up_message=online&up_color=green&down_message=offline&down_color=red&url=https%3A%2F%2Fhimik-vercel-api.vercel.app%2F&style=flat-square)](https://himik-vercel-api.vercel.app)
+
+# 🧪 ХИМИК — Интерактивный тренажер
+
+...ваш остальной текст...
+```
+
+**После сохранения вы увидите кликабельные бейджи:**
+*   При клике на "last commit" — откроется история коммитов.
+*   При клике на "repo size" — откроется репозиторий.
+*   При клике на "online" — откроется ваш сайт.
+
+Попробуйте скопировать блок кода из серого поля выше и вставить его в файл.
 
 
 

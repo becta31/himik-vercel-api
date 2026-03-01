@@ -1,3 +1,4 @@
+🧪 ХИМИК — Интерактивный тренажер
 
 [![GitHub last commit](https://img.shields.io/github/last-commit/becta31/himik-vercel-api?style=flat-square)](https://github.com/becta31/himik-vercel-api/commits/main)
 [![GitHub repo size](https://img.shields.io/github/repo-size/becta31/himik-vercel-api?style=flat-square)](https://github.com/becta31/himik-vercel-api)

@@ -86,16 +86,19 @@ GET /api/get-top-results
 
 Проект построен по простой serverless-схеме:
 
-```text
-Браузер
-   ↓
-HTML / CSS / JavaScript
-   ↓
-Vercel Static Hosting
-   ↓
-Vercel Serverless API
-   ↓
-MongoDB Atlas
+```mermaid
+flowchart TD
+    U[Пользователь] --> B[Браузер]
+    B --> F[HTML / CSS / JavaScript]
+    F --> V[Vercel Static Hosting]
+    F --> A[Vercel Serverless API]
+    A --> M[(MongoDB Atlas)]
+
+    F --> E[elements.json]
+
+    E --> F
+    M --> A
+    A --> F
 ```
 
 Основная логика приложения находится на клиенте:

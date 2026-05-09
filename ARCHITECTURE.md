@@ -19,18 +19,37 @@
 
 ## 2. Общая схема
 
-```text
-Пользователь
-   ↓
-Браузер
-   ↓
-HTML / CSS / JavaScript
-   ↓
-Vercel Static Hosting
-   ↓
-Vercel Serverless Functions
-   ↓
-MongoDB Atlas
+```mermaid
+flowchart TD
+    U[Пользователь] --> B[Браузер]
+
+    subgraph Frontend[Frontend: статическое приложение]
+        I[index.html]
+        S[study.html]
+        Q[quiz.html]
+        E[elements.json]
+    end
+
+    subgraph Vercel[Vercel]
+        CDN[Static Hosting / CDN]
+        API[Serverless Functions]
+    end
+
+    subgraph DB[Database]
+        M[(MongoDB Atlas)]
+    end
+
+    B --> CDN
+    CDN --> I
+    CDN --> S
+    CDN --> Q
+    CDN --> E
+
+    Q -->|POST результат| API
+    Q -->|GET рейтинг| API
+    API -->|insertOne / find| M
+    M -->|results| API
+    API -->|JSON| Q
 ```
 
 ---
@@ -300,18 +319,21 @@ mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/?retryWrites=true&w=m
 
 ## 9. Поток данных: режим обучения
 
-```text
-Пользователь открывает study.html
-   ↓
-Браузер загружает elements.json
-   ↓
-JavaScript сохраняет элементы в массив
-   ↓
-Пользователь вводит поиск или выбирает фильтр
-   ↓
-JavaScript фильтрует массив в браузере
-   ↓
-Карточки элементов перерисовываются на странице
+```mermaid
+sequenceDiagram
+    participant U as Пользователь
+    participant B as Браузер
+    participant S as study.html
+    participant E as elements.json
+
+    U->>B: Открывает страницу обучения
+    B->>S: Загружает study.html
+    S->>E: fetch('elements.json')
+    E-->>S: Возвращает список элементов
+    S->>S: Рендерит карточки элементов
+    U->>S: Вводит поиск или выбирает фильтр
+    S->>S: Фильтрует массив элементов
+    S-->>U: Обновляет карточки на странице
 ```
 
 Серверная часть в этом сценарии не используется.
@@ -320,42 +342,44 @@ JavaScript фильтрует массив в браузере
 
 ## 10. Поток данных: прохождение викторины
 
-```text
-Пользователь открывает quiz.html
-   ↓
-Браузер загружает elements.json
-   ↓
-JavaScript генерирует вопросы
-   ↓
-Пользователь отвечает на 10 вопросов
-   ↓
-JavaScript считает score, correctAnswers и maxStreak
-   ↓
-После завершения викторины результат отправляется в API
-   ↓
-POST /api/submit-result
-   ↓
-Serverless Function сохраняет результат в MongoDB
-   ↓
-API возвращает success: true
+```mermaid
+sequenceDiagram
+    participant U as Пользователь
+    participant Q as quiz.html
+    participant E as elements.json
+    participant API as POST /api/submit-result
+    participant DB as MongoDB Atlas
+
+    U->>Q: Открывает викторину
+    Q->>E: Загружает элементы
+    E-->>Q: Возвращает массив элементов
+    Q->>Q: Генерирует 10 вопросов
+    U->>Q: Отвечает на вопросы
+    Q->>Q: Считает score, correctAnswers, maxStreak
+    Q->>API: Отправляет результат
+    API->>DB: insertOne(result)
+    DB-->>API: insertedId
+    API-->>Q: success: true
+    Q-->>U: Показывает итоговый результат
 ```
 
 ---
 
 ## 11. Поток данных: таблица лидеров
 
-```text
-Пользователь открывает рейтинг
-   ↓
-quiz.html вызывает GET /api/get-top-results
-   ↓
-Serverless Function подключается к MongoDB
-   ↓
-MongoDB возвращает топ-10 результатов
-   ↓
-API возвращает JSON
-   ↓
-Frontend отображает таблицу лидеров
+```mermaid
+sequenceDiagram
+    participant U as Пользователь
+    participant Q as quiz.html
+    participant API as GET /api/get-top-results
+    participant DB as MongoDB Atlas
+
+    U->>Q: Открывает таблицу лидеров
+    Q->>API: Запрашивает топ-10 результатов
+    API->>DB: find().sort().limit(10)
+    DB-->>API: Возвращает результаты
+    API-->>Q: JSON с таблицей лидеров
+    Q-->>U: Отображает рейтинг
 ```
 
 ---

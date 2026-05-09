@@ -87,18 +87,30 @@ GET /api/get-top-results
 Проект построен по простой serverless-схеме:
 
 ```mermaid
-flowchart TD
+flowchart LR
     U[Пользователь] --> B[Браузер]
-    B --> F[HTML / CSS / JavaScript]
-    F --> V[Vercel Static Hosting]
-    F --> A[Vercel Serverless API]
-    A --> M[(MongoDB Atlas)]
 
-    F --> E[elements.json]
+    subgraph Frontend[Frontend]
+        P[HTML / CSS / JavaScript]
+        E[elements.json]
+    end
 
-    E --> F
-    M --> A
-    A --> F
+    subgraph Vercel[Vercel]
+        H[Static Hosting]
+        A[Serverless API]
+    end
+
+    subgraph Database[Database]
+        M[(MongoDB Atlas)]
+    end
+
+    B --> H
+    H --> P
+    P --> E
+    P -->|POST результат / GET рейтинг| A
+    A -->|insertOne / find| M
+    M -->|данные рейтинга| A
+    A -->|JSON| P
 ```
 
 Основная логика приложения находится на клиенте:

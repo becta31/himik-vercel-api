@@ -84,8 +84,12 @@ module.exports = async (req, res) => {
         const database = dbClient.db("Cluster0");
         const collection = database.collection("QuizResults");
 
+        const safeUserName = String(quizData.userName || 'Аноним')
+    .trim()
+    .slice(0, 50);
+
         const resultToSave = {
-            userName: quizData.userName || 'Аноним',
+            userName: safeUserName || 'Аноним',
             score: Number(quizData.score),
             correctAnswers: Number(quizData.correctAnswers),
             maxStreak: Number(quizData.maxStreak),

@@ -1,3 +1,5 @@
+// api/get-top-results.js
+
 const { MongoClient } = require('mongodb');
 
 const uri = process.env.MONGO_URI;
@@ -10,11 +12,36 @@ const CORS_HEADERS = {
 };
 
 async function connectToDatabase() {
-    if (!client) {
-        client = new MongoClient(uri);
-        await client.connect();
+    try {
+        if (!uri) {
+            throw new Error('MONGO_URI is not defined');
+        }
+
+        if (!client) {
+            const newClient = new MongoClient(uri);
+            await newClient.connect();
+            client = newClient;
+        }
+
+        // Проверяем, что соединение живое
+        await client.db("admin").command({ ping: 1 });
+
+        return client;
+
+    } catch (error) {
+        console.error("MongoDB connection error:", error);
+
+        if (client) {
+            try {
+                await client.close();
+            } catch (closeError) {
+                console.error("Error closing MongoDB client:", closeError);
+            }
+        }
+
+        client = null;
+        throw error;
     }
-    return client;
 }
 
 module.exports = async (req, res) => {
@@ -37,6 +64,8 @@ module.exports = async (req, res) => {
 
     try {
         const dbClient = await connectToDatabase();
+
+        // База данных и коллекция
         const database = dbClient.db("Cluster0");
         const collection = database.collection("QuizResults");
 
@@ -47,15 +76,16 @@ module.exports = async (req, res) => {
             .toArray();
 
         res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({
+        return res.end(JSON.stringify({
             success: true,
             results: topResults
         }));
 
     } catch (error) {
         console.error("Database read error:", error);
+
         res.writeHead(500, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({
+        return res.end(JSON.stringify({
             success: false,
             message: 'Internal Server Error',
             error: error.message

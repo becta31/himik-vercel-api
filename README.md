@@ -89,32 +89,10 @@ GET /api/get-top-results
 ```mermaid
 flowchart LR
     U[Пользователь] --> B[Браузер]
-
-    subgraph Vercel[Vercel]
-        H[Static Hosting]
-        API[Serverless API]
-    end
-
-    subgraph Static[Статические файлы]
-        HTML[index.html / study.html / quiz.html]
-        DATA[elements.json]
-    end
-
-    subgraph DB[Database]
-        M[(MongoDB Atlas)]
-    end
-
-    B --> H
-    H --> HTML
-    H --> DATA
-
-    HTML -->|загружает элементы| DATA
-    HTML -->|POST результат| API
-    HTML -->|GET рейтинг| API
-
-    API -->|insertOne / find| M
-    M -->|результаты| API
-    API -->|JSON| HTML
+    B --> S[Страницы сайта<br/>index / study / quiz]
+    S --> D[elements.json<br/>данные элементов]
+    S --> API[Vercel API<br/>рейтинг]
+    API --> DB[(MongoDB Atlas<br/>результаты викторины)]
 ```
 
 Основная логика приложения находится на клиенте:

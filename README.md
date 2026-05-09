@@ -90,27 +90,31 @@ GET /api/get-top-results
 flowchart LR
     U[Пользователь] --> B[Браузер]
 
-    subgraph Frontend[Frontend]
-        P[HTML / CSS / JavaScript]
-        E[elements.json]
-    end
-
     subgraph Vercel[Vercel]
         H[Static Hosting]
-        A[Serverless API]
+        API[Serverless API]
     end
 
-    subgraph Database[Database]
+    subgraph Static[Статические файлы]
+        HTML[index.html / study.html / quiz.html]
+        DATA[elements.json]
+    end
+
+    subgraph DB[Database]
         M[(MongoDB Atlas)]
     end
 
     B --> H
-    H --> P
-    P --> E
-    P -->|POST результат / GET рейтинг| A
-    A -->|insertOne / find| M
-    M -->|данные рейтинга| A
-    A -->|JSON| P
+    H --> HTML
+    H --> DATA
+
+    HTML -->|загружает элементы| DATA
+    HTML -->|POST результат| API
+    HTML -->|GET рейтинг| API
+
+    API -->|insertOne / find| M
+    M -->|результаты| API
+    API -->|JSON| HTML
 ```
 
 Основная логика приложения находится на клиенте:

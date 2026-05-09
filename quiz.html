@@ -597,77 +597,86 @@ try {
 
     // ФУНКЦИЯ showResults С ОТПРАВКОЙ ДАННЫХ
     function showResults() {
-        console.log('--- START: showResults() function fired. ---');
+    console.log('--- START: showResults() function fired. ---');
 
-        document.getElementById('questionCard').classList.add('hidden');
-        document.getElementById('resultsCard').classList.remove('hidden');
+    document.getElementById('questionCard').classList.add('hidden');
+    document.getElementById('resultsCard').classList.remove('hidden');
 
-        // 1. Отображение результатов на странице
-        document.getElementById('finalScore').textContent = score;
-        document.getElementById('correctAnswers').textContent = correctAnswers;
-        document.getElementById('maxStreak').textContent = maxStreak;
+    // 1. Отображение результатов на странице
+    document.getElementById('finalScore').textContent = score;
+    document.getElementById('correctAnswers').textContent = correctAnswers;
+    document.getElementById('maxStreak').textContent = maxStreak;
 
-        // ----------------------------------------------------------------
-        // 🚀 КОД ДЛЯ ОТПРАВКИ РЕЗУЛЬТАТА НА VERCEL API
-        // ----------------------------------------------------------------
+    // 2. Данные для отправки в Vercel API
+    const VERCEL_API_URL = 'https://himik-vercel-api.vercel.app/api/submit-result';
 
-        const VERCEL_API_URL = 'https://himik-vercel-api.vercel.app/api/submit-result';
+    const quizData = {
+        userName: userName || 'Аноним',
+        score: score,
+        correctAnswers: correctAnswers,
+        maxStreak: maxStreak
+    };
 
-        const quizData = {
-            userName: userName,
-            score: score,
-            correctAnswers: correctAnswers,
-            maxStreak: maxStreak
-        };
-
-        fetch(VERCEL_API_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(quizData)
-        })
+    // 3. Отправка результата в MongoDB через Vercel API
+    fetch(VERCEL_API_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(quizData)
+    })
         .then(response => {
-            if (!response.ok) {
-                console.error(`Ошибка сервера: ${response.status}. Данные не сохранены.`);
-                return response.json().catch(() => ({ message: 'No JSON body or Network Error' }));
-            }
-            return response.json();
+            return response.json().then(data => {
+                return {
+                    ok: response.ok,
+                    status: response.status,
+                    data: data
+                };
+            });
         })
-        .then(data => {
-            console.log('✅ Результат викторины успешно сохранен:', data);
+        .then(result => {
+            if (result.ok && result.data.success) {
+                console.log('✅ Результат викторины успешно сохранен:', result.data);
+            } else {
+                console.error('❌ Сервер вернул ошибку:', {
+                    status: result.status,
+                    data: result.data
+                });
+            }
         })
         .catch(error => {
             console.error('❌ Ошибка при отправке результата:', error);
         });
 
-        console.log('--- END: Fetch request sent (or failed to send). ---');
+    console.log('--- END: Fetch request sent (or failed to send). ---');
 
-        // 4. Формирование сообщения о результате
-        const percentage = Math.round((correctAnswers / TOTAL_QUESTIONS) * 100);
-        let message = '';
+    // 4. Формирование сообщения о результате
+    const percentage = Math.round((correctAnswers / TOTAL_QUESTIONS) * 100);
+    let message = '';
 
-        if (percentage >= 90) {
-            message = 'Отличный результат! Вы настоящий химик! 🧪';
-        } else if (percentage >= 70) {
-            message = 'Хорошая работа! У вас есть знания в химии! 👍';
-        } else if (percentage >= 50) {
-            message = 'Неплохо! Продолжайте учиться! 📚';
-        } else {
-            message = 'Нужно больше практики! Не сдавайтесь! 💪';
-        }
-
-        const resultsCard = document.getElementById('resultsCard');
-        const messageElement = document.createElement('p');
-        messageElement.className = 'text-lg text-gray-300 mb-6';
-        messageElement.textContent = message;
-
-        const existingMessage = resultsCard.querySelector('.text-lg.text-gray-300.mb-6');
-        if (existingMessage) {
-             existingMessage.remove();
-        }
-        resultsCard.insertBefore(messageElement, resultsCard.children[2]);
+    if (percentage >= 90) {
+        message = 'Отличный результат! Вы настоящий химик! 🧪';
+    } else if (percentage >= 70) {
+        message = 'Хорошая работа! У вас есть знания в химии! 👍';
+    } else if (percentage >= 50) {
+        message = 'Неплохо! Продолжайте учиться! 📚';
+    } else {
+        message = 'Нужно больше практики! Не сдавайтесь! 💪';
     }
+
+    const resultsCard = document.getElementById('resultsCard');
+    const messageElement = document.createElement('p');
+    messageElement.className = 'text-lg text-gray-300 mb-6';
+    messageElement.textContent = message;
+
+    const existingMessage = resultsCard.querySelector('.text-lg.text-gray-300.mb-6');
+
+    if (existingMessage) {
+        existingMessage.remove();
+    }
+
+    resultsCard.insertBefore(messageElement, resultsCard.children[2]);
+}
 
     // Перезапуск викторины
     function restartQuiz() {

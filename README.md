@@ -72,6 +72,7 @@ python -m http.server 8000
 *   [Архитектура проекта (ARCHITECTURE.md)](./ARCHITECTURE.md) — как устроена система.
 *   [API Документация (API_DOCS.md)](./API_DOCS.md) — как работать с бэкендом.
 *   [Руководство для участников (CONTRIBUTING.md)](./CONTRIBUTING.md) — как помочь проекту.
+
 ---
 
 ## 👤 Автор

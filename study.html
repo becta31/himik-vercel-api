@@ -70,10 +70,10 @@
             border-left: 4px solid #FF9800; /* ИСПРАВЛЕНО: Новый оранжевый */
         }
         /* Щелочноземельные металлы (alkaline_earth) */
-        .category-alkaline-earth {
-            background: rgba(255, 193, 7, 0.2);
-            border-left: 4px solid #f39c12;
-        }
+        .category-alkaline-earth-metal {
+    background: rgba(255, 193, 7, 0.2);
+    border-left: 4px solid #f39c12;
+}
         /* Переходные металлы (transition_metal) */
         .category-transition-metal {
             background: rgba(103, 58, 183, 0.2);
@@ -300,7 +300,7 @@
                 'nonmetal': 'Неметалл',
                 'noble_gas': 'Благородный газ',
                 'alkali_metal': 'Щелочной металл',
-                'alkaline_earth': 'Щелочноземельный металл',
+                'alkaline_earth_metal': 'Щелочноземельный металл',
                 'transition_metal': 'Переходный металл',
                 'metalloid': 'Металлоид',
                 'post_transition_metal': 'Постпереходный металл',
@@ -315,7 +315,7 @@
         function isMetal(element) {
             const metalCategories = [
                 'alkali_metal',
-                'alkaline_earth',
+                'alkaline_earth_metal',
                 'transition_metal',
                 'post_transition_metal',
                 'lanthanide',

@@ -21,7 +21,7 @@ async function connectToDatabase() {
     return client;
 }
 
-export default async (req, res) => {
+module.exports = async (req, res) => {
     // 1. Обработка CORS preflight
     if (req.method === 'OPTIONS') {
         res.writeHead(200, CORS_HEADERS);

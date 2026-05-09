@@ -129,6 +129,7 @@ himik-vercel-api/
 ├── API_DOCS.md
 ├── ARCHITECTURE.md
 ├── CONTRIBUTING.md
+├── .gitignore
 ├── LICENSE
 ├── README.md
 ├── elements.json

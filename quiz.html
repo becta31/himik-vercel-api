@@ -534,6 +534,14 @@
 
 
     // ФУНКЦИЯ: Загрузка и отображение таблицы лидеров
+    function escapeHTML(value) {
+    return String(value)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+}
 async function loadLeaderboard() {
 const loading = document.getElementById('leaderboardLoading');
 const errorElement = document.getElementById('leaderboardError');
@@ -572,7 +580,7 @@ try {
             html += `
                 <tr class="${rowClass}">
                     <td class="py-2 text-lg font-bold">${rank}</td>
-                    <td class="py-2">${result.userName || 'Аноним'}</td>
+                    <td class="py-2">${escapeHTML(result.userName || 'Аноним')}</td>
                     <td class="py-2 text-green-400 font-semibold">${result.score}</td>
                     <td class="py-2">${result.correctAnswers}</td>
                     <td class="py-2">${result.maxStreak}</td>
